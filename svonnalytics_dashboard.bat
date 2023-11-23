@@ -117,9 +117,17 @@ IF NOT EXIST "!CUSTOMPATH!" (
     echo Directory already exists: !CUSTOMPATH!
 )
 
-:: Run the Dash app
+:: Run the Dash app in a new window
 echo Starting Dash application...
-python dash_app.py --path "!CUSTOMPATH!"
+start cmd /k "python dash_app.py --path "!CUSTOMPATH!""
+
+:: Wait for 2 seconds to allow the server to start
+timeout /t 2 /nobreak >nul
+
+:: Open the Dash app in the default browser
+echo Opening Dash application in the browser...
+start http://127.0.0.1:8050/
+
 
 :: Pause the script to keep the window open
 pause
