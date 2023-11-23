@@ -9,6 +9,7 @@ stat_groups = {
     'Goalkeeper': ['Parierte Elfmeter (%)', 'xSv %', 'Par %', 'xG verh/90']
 }
 
+
 role_mapping = {
     'gk': ['TW'],
     'cd': ['V(Z)'],
