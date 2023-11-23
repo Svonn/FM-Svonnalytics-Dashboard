@@ -1,0 +1,29 @@
+.dash-spreadsheet.dash-freeze-left {
+    max-width: none !important;
+    max-height: none !important;
+}
+
+.custom-dropdown .Select-control {
+    background-color: #343a40; /* Same as navbar background */
+    color: white;
+    border: none;
+}
+
+.custom-dropdown .Select-menu-outer {
+    background-color: #343a40;
+    color: white;
+}
+
+.custom-dropdown .Select-value,
+.custom-dropdown .Select-value-label {
+    color: white !important;  /* Ensures that this style overrides any other style */
+}
+
+
+.custom-dropdown .Select-placeholder {
+    color: white;
+}
+
+.custom-dropdown .Select-arrow-zone {
+    color: white;
+}
