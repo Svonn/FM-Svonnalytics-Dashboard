@@ -1,3 +1,7 @@
+Miniconda/
+.vscode/
+*.exe
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -6,9 +10,8 @@ __pycache__/
 # C extensions
 *.so
 
-
 # Distribution / packaging
-.vscode/
+
 .Python
 build/
 develop-eggs/
