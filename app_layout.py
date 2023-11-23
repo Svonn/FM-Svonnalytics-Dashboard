@@ -2,7 +2,7 @@ import time
 import dash_bootstrap_components as dbc  
 from dash import dcc, html, dash_table  
 from data_processing import compute_averages_and_max, compute_league_averages, compute_overall_league_scores, get_relevant_columns, precompute_filtered_dataframes
-from configurations import role_mapping, fm_24_export_path
+from configurations import role_mapping
 from visualization import create_sorted_bar_chart  
   
 roles = list(role_mapping.keys())  
@@ -161,7 +161,7 @@ def create_visualization_tab(label, scores, tab_id):
     return dcc.Tab(id=tab_id, label=label, children=[dcc.Graph(figure=figure)])
 
 
-def create_app_layout(app):  
+def create_app_layout(app, html_export_path):  
 
     role_tabs_content = []
     dropdown_style = {
@@ -174,9 +174,9 @@ def create_app_layout(app):
     directory_dropdown = dcc.Dropdown(
         id='directory-dropdown',
         options=[
-            {'label': 'FM24 Files', 'value': fm_24_export_path}
+            {'label': 'FM24 Files', 'value': html_export_path}
         ],
-        value=fm_24_export_path,  # default value
+        value=html_export_path,  # default value
         className='custom-dropdown',
         style=dropdown_style
     )

@@ -1,6 +1,3 @@
-fm_24_export_path = 'F:\\Games\\FM24 Files\\exported_html'
-
-
 stat_groups = {
     'GoalScoring': ['Sch/90', 'Chancenverwertung (%)', 'SaT/90', 'xG/Sch (%)', 'xG/90', 'xG-ohn11/90', 'xG-OP', 'Tor/90'],
     'Assisting': ['xA/90', 'Vorl/90', 'Ch/90'],

@@ -1,6 +1,7 @@
-Miniconda/
+Miniconda3/
 .vscode/
 *.exe
+prev_path.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
