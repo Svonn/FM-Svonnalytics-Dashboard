@@ -11,7 +11,9 @@ import configurations
 parser = argparse.ArgumentParser()
 parser.add_argument('--path', help='path to the folder with the exported html files')
 args = parser.parse_args()
-path = args.path
+
+path = args.path.strip()
+
 
 if not path:
     path = 'F:\\Games\\FM24 Files\\exported_html'
