@@ -5,16 +5,17 @@ echo Checking if the installation is complete...
 
 :: Define repository root as the script's current directory
 SET "REPO_ROOT=%~dp0"
-echo Repository Root: "!REPO_ROOT!"
+echo Repository Root: "%REPO_ROOT%"
 
 :: Check if the path contains spaces
-:: This will set a flag if a space is found in the path
-SET "SPACE_CHECK=!REPO_ROOT: =!"
-IF NOT "!SPACE_CHECK!"=="!REPO_ROOT!" (
-    echo The script cannot run in a path with spaces.
+:: This will search for a space in the path
+echo Checking for spaces in the path...
+IF "%REPO_ROOT: =%" NEQ "%REPO_ROOT%" (
+    echo ERROR: The script cannot run in a path with spaces. Please move this directory to a path without whitespaces!
     pause
     exit /b 1
 )
+
 :: Check if Miniconda is installed in the repository
 IF NOT EXIST "!REPO_ROOT!Miniconda3\Scripts\conda.exe" (
     echo Miniconda not found, installing to: "!REPO_ROOT!Miniconda3"

@@ -43,7 +43,7 @@ def convert_stats_to_scores(squad_df, stat_sets, max_score=20, role=None):
         filtered_df = squad_df
 
     percentile = filtered_df['Starting 11'].quantile(0.4)
-    min_starting_11 = max(3, min(5, math.ceil(percentile)))
+    min_starting_11 = max(3, min(10, math.ceil(percentile)))
     # Filter the data to include only players above this threshold
     filtered_data = filtered_df[filtered_df['Starting 11'] >= min_starting_11]
     all_stats = list(set([stat for set_stats in stat_sets.values()
