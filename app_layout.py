@@ -20,19 +20,19 @@ def create_tabs(processed_data_frame):
     print(f"Calculating scores took {round(time.time() - start_ts, 2)} seconds")
 
     # Common dropdown options
-    league_options = [{'label': league, 'value': league} for league in processed_data_frame['Liga'].unique()]
+    league_options = [{'label': league, 'value': league} for league in processed_data_frame['Division'].unique()]
     league_options.append({'label': 'All', 'value': 'All'})
 
     # All Players Tab
     relevant_columns = get_relevant_columns("all")
     df_general_stats = processed_data_frame[relevant_columns]
-    tabs.append(create_data_table_tab('All Players', df_general_stats, 'tab-all-players', 'best_role_score'))
+    tabs.append(create_data_table_tab('All Players', df_general_stats, 'tab-all-players', 'Best Rating'))
 
     # Role-specific Tabs
     for role in roles:
         relevant_columns = get_relevant_columns(role)
         df_role_specific_stats = role_dfs[role][relevant_columns]
-        tabs.append(create_data_table_tab(f'{role.upper()} Players', df_role_specific_stats, f'tab-{role}-players', role))
+        tabs.append(create_data_table_tab(f'{role.upper()} Players', df_role_specific_stats, f'tab-{role}-players', f'{role} (Score)'))
 
         # Adding visualizations for each role
         tabs.extend(create_visualization_tabs(role, avg_per_club_per_role[role], max_per_club_per_role[role], 
@@ -63,7 +63,7 @@ def create_data_table_tab(label, dataframe, tab_id, sort_column):
         fixed_rows={'headers': True},
         style_table={'height': 'auto', 'overflowY': 'auto', 'minHeight': '300px'},
         style_cell={
-            'minWidth': '100px', 'width': '100px', 'maxWidth': '150px',
+            'minWidth': '100px', 'width': '150px', 'maxWidth': '250px',
             'overflow': 'hidden',
             'textOverflow': 'ellipsis',
         },

@@ -1,185 +1,299 @@
-stat_groups = {
-    'GoalScoring': ['Sch/90', 'Chancenverwertung (%)', 'SaT/90', 'xG/Sch (%)', 'xG/90', 'xG-ohn11/90', 'xG-OP', 'Tor/90'],
-    'Assisting': ['xA/90', 'Vorl/90', 'Ch/90'],
-    'Opening': ['Ps V/90', 'Pr Pässe/90', 'Ps A/90', 'E Pä/90', 'EntP(S)/90', 'Ballverl/90', 'Drb/90'],
-    'Wingplay': ['Vers Fla/90', 'Ang Fla/90', 'Lauf/90'],
-    'Pressing': ['PrsV/90', 'PrsErf'],
-    'Defense': ['Ballgew/90', 'AbB/90', 'Klär/90', 'Ent Zwk/90', 'Zwk %', 'Tck/90', 'Blk/90', 'TGgt/90'],
-    'Aerial': ['Kop V/90', 'Kopf G/90', 'Ent Kopf/90'],
-    'Goalkeeper': ['Parierte Elfmeter (%)', 'xSv %', 'Par %', 'xG verh/90']
+stat_sets = {
+    'Goalkeeping':
+    {
+        'Expected Goals Prevented per 90 minutes': 3,
+        'Save Ratio': 2,
+        'Expected Save Percentage': 2,
+        'Penalties Saved Ratio': 1,
+    },
+    'Defensive Play': {
+        'Possession Won per 90 minutes': 8,
+        'Key Tackles per 90 minutes': 5,
+        'Interceptions per 90 minutes': 5,
+        'Clearances per 90 minutes': 4,
+        'Blocks per 90 minutes': 4,
+        'Tackle completion ratio': 3,
+        'Tackles per 90 minutes': 2,
+        'Team Goals Conceded per 90 minutes': 2,
+        'Pressures completed per 90 minutes': 1,
+    },
+    'Aerial Ability': {
+        'Key Headers per 90 minutes': 8,
+        'Headers Won per 90 minutes': 6,
+        'Aerial Challenges attempted per 90 minutes': 1
+    },
+    'Build-up Play': {
+        'Progressive Passes per 90 minutes': 8,
+        'Passes completed per 90 minutes': 5,
+        'Possession Lost per 90 minutes': 5,
+        'Open Play Key Passes per 90 minutes': 3,
+        'Key Passes per 90 minutes': 3,
+        'Passes attempted per 90 minutes': 1
+    },
+    'Wing Play': {
+        'Crosses completed per 90 minutes': 8,
+        'Dribbles Made per 90 minutes': 1,
+        'Crosses attempted per 90 minutes': 1,
+    },
+    'Creation': {
+        'Expected Assists per 90 minutes': 2,
+        'Chances Created per 90 minutes': 2,
+        'Assists per 90 minutes': 1,
+        'Open Play Key Passes per 90 minutes': 1,
+    },
+    'Presence': {
+        'Pressures completed per 90 minutes': 1,
+        'Distance Covered per 90 minutes': 1,
+        'Pressures attempted per 90 minutes': 1,
+    },
+    'Goal Scoring': {
+        'Goals per 90 minutes': 8,
+        'Expected Goals Overperformance': 7,
+        'Conversion Rate (%)': 6,
+        'Shots On Target per 90 minutes': 1,
+        'Shots per 90 minutes': 0.5,
+    },
+    'Pressing': {
+        'Possession Won per 90 minutes': 3,
+        'Pressures completed per 90 minutes': 3,
+        'Distance Covered per 90 minutes': 2,
+        'Interceptions per 90 minutes': 2,
+        'Pressures attempted per 90 minutes': 2,
+    }
 }
 
 
 role_mapping = {
-    'gk': ['TW'],
-    'cd': ['V(Z)'],
-    'wbr': ['V(R)','FV(R)'],
-    'iwbr': ['V(R)'],
-    'wbl': ['V(L)','FV(L)'],
-    'iwbl': ['V(L)'],
-    'dm': ['DM'],
-    'sv': ['DM'],
-    'pm': ['DM', 'M(Z)', 'OM(Z)'],
-    'am': ['M(Z)', 'OM(Z)'],
-    'wr': ['M(R)', 'OM(R)'],
-    'wl': ['M(L)','OM(L)'],
-    'iwr': ['M(R)', 'OM(R)'],
-    'iwl': ['M(L)', 'OM(L)'],
-    'st': ['ST(Z)']
+    'GK': ['TW', 'GK'],
+    'CD': ['V(Z)', 'D(C)'],
+    'WBR': ['V(R)', 'FV(R)', 'D(R)', 'WB(R)'],
+    'IWBR': ['V(R)', 'D(R)'],
+    'WBL': ['V(L)', 'FV(L)', 'D(L)', 'WB(L)'],
+    'IWBL': ['V(L)', 'D(L)'],
+    'DM': ['DM'],
+    'SV': ['DM'],
+    'PM': ['DM', 'M(Z)', 'OM(Z)', 'M(C)', 'AM(C)'],
+    'AM': ['M(Z)', 'OM(Z)', 'M(C)', 'AM(C)'],
+    'WR': ['M(R)', 'OM(R)', 'AM(R)'],
+    'WL': ['M(L)', 'OM(L)', 'AM(L)'],
+    'IWR': ['M(R)', 'OM(R)', 'AM(R)'],
+    'IWL': ['M(L)', 'OM(L)', 'AM(L)'],
+    'ST': ['ST(Z)', 'ST(C)']
 }
 
-role_attributes = {
-    'gk': {
+role_weightings = {
+    'GK': {
         'attributes': {
             # Technisch
-            'Ref': 3, 'HB': 2, 'StK': 2, 'Kom': 2, 'Hal': 2, '1v1': 2, 'Pas': 1, 'Abw': 1, 
+            'Reflexes': 3, 'Aerial Reach': 2, 'Command Of Area': 2, 'Communication': 2, 'Handling': 2, 'One On Ones': 2, 'Passing': 1, 'Throwing': 1,
             # Mental
-            'Azp': 2,'Ner': 2,'Kon': 2, 'Ent': 2, 'Ste': 1, 'Übs': 1,
+            'Anticipation': 2, 'Composure': 2, 'Concentration': 2, 'Decisions': 2, 'Positioning': 1, 'Vision': 1,
             # Physisch
-            'Bew': 3, 'Spr': 1, 'Bal': 1, 'Ant': 1, 
+            'Agility': 3, 'Jumping Reach': 1, 'Balance': 1, 'Acceleration': 1,
             # WeakFoot
             'WeakFoot': 1
         },
-        'stats': ['Goalkeeper']
+        'stats': {
+            'Goalkeeping': 3,
+            'Build-up Play': 1
+        }
     },
-    'cd': {
+    'CD': {
         'attributes': {
             # Technisch
-            'Tck': 3,'Dck': 3,'Kpf': 1, 'Pas': 1, 'Ann': 1,
+            'Tackling': 3, 'Marking': 3, 'Heading': 1, 'Passing': 1, 'First Touch': 1,
             # Mental
-            'Azp': 2, 'Mut': 2, 'Ner': 2,'Kon': 2, 'Ste': 2, 'Ent': 1, 
+            'Anticipation': 2, 'Bravery': 2, 'Composure': 2, 'Concentration': 2, 'Positioning': 2, 'Decisions': 1,
             # Physisch
-            'Sch': 4,'Spr': 4,'Ant': 4,'Kra': 3, 'Bew': 2, 'Bal': 2,
+            'Pace': 4, 'Jumping Reach': 4, 'Acceleration': 4, 'Strength': 3, 'Agility': 2, 'Balance': 2,
             # WeakFoot
             'WeakFoot': 1
         },
-        'stats': ['Defense', 'Aerial']
+        'stats': {
+            'Defensive Play': 10,
+            'Aerial Ability': 4,
+            'Build-up Play': 2,
+        }
     },
-    'wb': {
+    'WB': {
         'attributes': {
             # Technisch
-            'Fla': 3, 'Dri': 3, 'Pas': 2, 'Ann': 2, 'Tck': 1, 'Dck': 0.5, 
+            'Crossing': 3, 'Dribbling': 3, 'Passing': 2, 'First Touch': 2, 'Tackling': 1, 'Marking': 0.5,
             # Mental
-            'Ent': 3, 'Esf': 3, 'Azp': 1, 'Ner': 1, 'Kon': 1, 'Ste': 1, 'Tea': 1, 'Agg': 1, 'Ohn': 1,
+            'Decisions': 3, 'Work Rate': 3, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1, 'Positioning': 1, 'Teamwork': 1, 'Aggression': 1, 'Off The Ball': 1,
             # Physisch
-            'Sch': 4, 'Ant': 4, 'Bew': 1, 'Aus': 2, 'Kra': 1, 'Bal': 1,   
+            'Pace': 4, 'Acceleration': 4, 'Agility': 1, 'Stamina': 2, 'Strength': 1, 'Balance': 1,
         },
-        'stats': ['Defense', 'Assisting', 'Wingplay', 'Opening', 'Pressing']
+        'stats': {
+            'Wing Play': 8,
+            'Defensive Play': 4,
+            'Presence': 6,
+            'Build-up Play': 3,
+            'Pressing': 1,
+        }
     },
-    'iwb': {
+    'IWB': {
         'attributes': {
             # Technisch
-            'Pas': 4, 'Ann': 4, 'Dck': 2, 'Tck': 2, 'Tec': 1, 
+            'Passing': 4, 'First Touch': 4, 'Marking': 2, 'Tackling': 2, 'Technique': 1,
             # Mental
-            'Tea': 4, 'Ent': 4,  'Ner': 3, 'Ste': 2, 'Esf': 2, 'Agg': 2, 'Ohn': 2, 'Azp': 2, 'Kon': 1, 
+            'Teamwork': 4, 'Decisions': 4,  'Composure': 3, 'Positioning': 2, 'Work Rate': 2, 'Aggression': 2, 'Off The Ball': 2, 'Anticipation': 2, 'Concentration': 1,
             # Physisch
-            'Spr': 1, 'Kra': 1, 'Ant': 2, "Sch": 2, 'Aus': 1, 
+            'Jumping Reach': 1, 'Strength': 1, 'Acceleration': 2, "Pace": 2, 'Stamina': 1,
             # WeakFoot
             'WeakFoot': 1
         },
-        'stats': ['Defense', 'Assisting', 'Opening', 'Pressing']
+        'stats': {
+            'Build-up Play': 8,
+            'Defensive Play': 6,
+            'Presence': 1,
+            'Pressing': 1,
+            'Wing Play': 1,
+        }
     },
-    'dm': {
+    'DM': {
         'attributes': {
             # Technisch
-            'Tck': 2, 'Pas': 2, 'Ann': 2, 'Dck': 2,
+            'Tackling': 2, 'Passing': 2, 'First Touch': 2, 'Marking': 2,
             # Mental
-            'Esf': 3, 'Agg': 4, 'Tea': 2, 'Ste': 2, 'Azp': 2, 'Mut': 2, 'Kon': 2, 'Ent': 1, 'Ner': 1, 'Ohn': 1,
+            'Work Rate': 3, 'Aggression': 4, 'Teamwork': 2, 'Positioning': 2, 'Anticipation': 2, 'Bravery': 2, 'Concentration': 2, 'Decisions': 1, 'Composure': 1, 'Off The Ball': 1,
             # Physisch
-            'Spr': 2, 'Kra': 2, 'Aus': 1, 'Ant': 1, "Sch": 1,
+            'Jumping Reach': 2, 'Strength': 2, 'Stamina': 1, 'Acceleration': 1, "Pace": 1,
         },
-        'stats': ['Defense', 'Opening', 'Aerial', 'Pressing']
+        'stats': {
+            'Defensive Play': 5,
+            'Build-up Play': 5,
+            'Pressing': 2,
+        }
     },
-    'sv': {
+    'SV': {
         'attributes': {
             # Technisch
-            'Pas': 2, 'Dri': 2, 'WS': 2, 'Ann': 2, 'Tec': 1, 'Abs': 1, 
+            'Passing': 4, 'Dribbling': 4, 'Long Shots': 2, 'First Touch': 4, 'Technique': 3, 'Finishing': 2, 'Tackling': 1, 'Marking': 1,
             # Mental
-             'Ohn': 4, 'Esf': 3, 'Übs': 2, 'Ent': 3, 'Azp': 1, 'Ner': 1, 'Kon': 1, 
+            'Off The Ball': 4, 'Work Rate': 3, 'Vision': 2, 'Decisions': 3, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1, 'Teamwork': 2, 'Positioning': 1, 'Concentration': 1,
             # Physisch
-             'Sch': 4, 'Ant': 4, 'Bal': 2, 'Bew': 2, 
+            'Pace': 4, 'Acceleration': 4, 'Stamina': 2, 'Balance': 2, 'Agility': 2,
         },
-        'stats': ['Opening', 'Assisting', 'GoalScoring']
+        'stats': {
+            'Build-up Play': 8,
+            'Creation': 5,
+            'Presence': 5,
+            'Goal Scoring': 2,
+            'Defensive Play': 2,
+            'Pressing': 1,
+        }
     },
-    'pm': {
+    'PM': {
         'attributes': {
             # Technisch
-            'Pas': 5, 'Ann': 4, 'Dri': 1, 'Tec': 3, 'Abs': 1, 'WS': 1, 
+            'Passing': 5, 'First Touch': 4, 'Dribbling': 1, 'Technique': 3, 'Finishing': 1, 'Long Shots': 1,
             # Mental
-            'Übs': 5, 'Ohn': 4,  'Ent': 4, 'Azp': 1, 'Ner': 1, 'Kon': 1, 
+            'Vision': 5, 'Off The Ball': 4,  'Decisions': 4, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1,
             # Physisch
-            'Bal': 2, 'Bew': 2, 'Sch': 1, 'Ant': 1, 
+            'Balance': 2, 'Agility': 2, 'Pace': 1, 'Acceleration': 1,
             # WeakFoot
             'WeakFoot': 1
         },
-        'stats': ['Opening', 'Assisting']
+        'stats': {
+            'Build-up Play': 8,
+            'Creation': 8,
+            'Goal Scoring': 3,
+            'Presence': 2,
+            'Pressing': 1,
+        }
     },
-    'am': {
+    'AM': {
         'attributes': {
             # Technisch
-            'Pas': 2, 'Dri': 2, 'Tec': 2, 'Abs': 2, 'WS': 2, 'Ann': 2,
+            'Passing': 2, 'Dribbling': 2, 'Technique': 2, 'Finishing': 2, 'Long Shots': 2, 'First Touch': 2,
             # Mental
-             'Ohn': 3, 'Übs': 2, 'Ent': 2, 'Azp': 1, 'Ner': 1, 'Kon': 1, 
+            'Off The Ball': 3, 'Vision': 2, 'Decisions': 2, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1,
             # Physisch
-             'Sch': 3, 'Ant': 3, 'Bal': 2, 'Bew': 2, 
+            'Pace': 3, 'Acceleration': 3, 'Balance': 2, 'Agility': 2,
             # WeakFoot
             'WeakFoot': 1
         },
-        'stats': ['GoalScoring', 'Assisting', 'Opening', 'Pressing']
+        'stats': {
+            'Creation': 8,
+            'Build-up Play': 8,
+            'Goal Scoring': 6,
+            'Presence': 4,
+            'Pressing': 1,
+        }
     },
-    'w': {
+    'W': {
         'attributes': {
             # Technisch
-            'Dri': 3, 'Fla': 3, 'Pas': 2, 'Tec': 2, 'Abs': 1, 'WS': 1, 'Ann': 1,
+            'Dribbling': 3, 'Crossing': 3, 'Passing': 2, 'Technique': 2, 'Finishing': 1, 'Long Shots': 1, 'First Touch': 1,
             # Mental
-            'Ohn': 3, 'Esf': 2, 'Azp': 1, 'Ner': 1, 'Kon': 1, 'Ent': 1,'Übs': 1, 
+            'Off The Ball': 3, 'Work Rate': 2, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1, 'Decisions': 1, 'Vision': 1,
             # Physisch
-            'Sch': 4, 'Ant': 4, 'Bew': 2, 'Bal': 2,
+            'Pace': 4, 'Acceleration': 4, 'Agility': 2, 'Balance': 2,
             # WeakFoot
             'WeakFoot': 1
         },
-        'stats': ['GoalScoring', 'Assisting', 'Wingplay', 'Opening', 'Pressing']
+        'stats': {
+            'Wing Play': 8,
+            'Creation': 7,
+            'Presence': 4,
+            'Goal Scoring': 3,
+            'Pressing': 1,
+        }
     },
-    'iw': {
+    'IW': {
         'attributes': {
             # Technisch
-            'Dri': 3, 'Pas': 2, 'Tec': 2,  'Abs': 2, 'WS': 2, 'Ann': 1, 'Fla': 1,
+            'Dribbling': 3, 'Passing': 2, 'Technique': 2,  'Finishing': 2, 'Long Shots': 2, 'First Touch': 1, 'Crossing': 1,
             # Mental
-            'Ohn': 3, 'Esf': 2, 'Azp': 1, 'Ner': 1, 'Kon': 1, 'Ent': 1,'Übs': 1, 
+            'Off The Ball': 3, 'Work Rate': 2, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1, 'Decisions': 1, 'Vision': 1,
             # Physisch
-            'Sch': 4, 'Ant': 4, 'Bew': 2, 'Bal': 2,
+            'Pace': 4, 'Acceleration': 4, 'Agility': 2, 'Balance': 2,
             # WeakFoot
             'WeakFoot': 1
         },
-        'stats': ['GoalScoring', 'Assisting', 'Wingplay', 'Opening', 'Pressing']
+        'stats': {
+            'Creation': 8,
+            'Goal Scoring': 8,
+            'Wing Play': 4,
+            'Presence': 4,
+            'Pressing': 1,
+        }
     },
-    'st': {
+    'ST': {
         'attributes': {
             # Technisch
-            'Abs': 3, 'Dri': 1, 'Kpf': 2, 'Pas': 1, 'Tec': 1, 
+            'Finishing': 3, 'Dribbling': 1, 'Heading': 2, 'Passing': 1, 'Technique': 1,
             # Mental
-            'Ohn': 3,'Azp': 3, 'Ner': 2, 'Kon': 1, 'Ent': 1,
+            'Off The Ball': 3, 'Anticipation': 3, 'Composure': 2, 'Concentration': 1, 'Decisions': 1,
             # Physisch
-            'Ant': 6, 'Sch': 6, 'Spr': 4, 'Bew': 2, 'Bal': 4, 'Kra': 2,
+            'Acceleration': 6, 'Pace': 6, 'Jumping Reach': 4, 'Agility': 2, 'Balance': 4, 'Strength': 2,
             # WeakFoot
             'WeakFoot': 1
         },
-        'stats': ['GoalScoring', 'Aerial', 'Pressing']
+        'stats': {
+            'Goal Scoring': 10,
+            'Creation': 4,
+            'Pressing': 1,
+            'Build-up Play': 1,
+        }
     },
 }
 
-role_attributes["wbl"] = role_attributes["wb"]
-role_attributes["wbr"] = role_attributes["wb"]
-role_attributes["wl"] = role_attributes["w"]
-role_attributes["wr"] = role_attributes["w"]
-role_attributes["iwbr"] = role_attributes["iwb"]
-role_attributes["iwbl"] = role_attributes["iwb"]
-role_attributes["iwl"] = role_attributes["iw"]
-role_attributes["iwr"] = role_attributes["iw"]
-
-
-
+role_weightings["WBL"] = role_weightings["WB"]
+role_weightings["WBR"] = role_weightings["WB"]
+del role_weightings["WB"]
+role_weightings["WL"] = role_weightings["W"]
+role_weightings["WR"] = role_weightings["W"]
+del role_weightings["W"]
+role_weightings["IWBR"] = role_weightings["IWB"]
+role_weightings["IWBL"] = role_weightings["IWB"]
+del role_weightings["IWB"]
+role_weightings["IWL"] = role_weightings["IW"]
+role_weightings["IWR"] = role_weightings["IW"]
+del role_weightings["IW"]
 
 foot_rating_conversion = {
-    "Sehr stark": 20, "Stark": 16, "Gut": 12, "Passabel": 8, "Schwach": 4, "Sehr schwach": 0
+    "Sehr stark": 20, "Stark": 16, "Gut": 12, "Passabel": 8, "Schwach": 4, "Sehr schwach": 0,
+    "Very Strong": 20, "Strong": 16, "Fairly Strong": 12, "Reasonable": 8, "Weak": 4, "Very Weak": 0,
 }

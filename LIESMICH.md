@@ -6,19 +6,30 @@
 > Ich hab das Readme mit GPT-4 aus dem Englischen übersetzt und auch das Readme war schon mit GPT-4 teilweise generiert. Kann also passieren dass irgendwo mal Quatsch steht falls es mir beim drüberlesen durchgerutscht ist. 
 
 ## Worum geht es?
-Willkommen beim Scouting- & Analytics-Dashboard für Football Manager 2024, entwickelt von mir, Svonn. Dieses Tool wurde für "Veni Vidi Vici", ein Online-Multiplayer-Spiel mit über 30 menschlichen Trainern, entworfen. Es berechnet eine Gesamtpunktzahl für Spieler basierend auf Schlüsselattributen, die für ihre Rollen relevant sind. Weitere Details zur Berechnung der Punktzahlen findest du unten. Derzeit ist dieses Dashboard mit der deutschen Version des Spiels (23/24) kompatibel, eine englische Version kommt bald. Derzeit werden alle Attribute offen gelegt, was in Multiplayer-Spielen üblich ist, da die Spieler zwischen den Spielen keine Zeit haben, ihre Scouts zu verwalten.
+Willkommen beim Scouting- & Analytics-Dashboard für Football Manager 2024, entwickelt von mir, Svonn. Dieses Tool wurde für "Veni Vidi Vici", ein Online-Multiplayer-Spiel mit über 30 menschlichen Trainern, entworfen. Es berechnet eine Gesamtpunktzahl für Spieler basierend auf Schlüsselattributen und Statistiken, die für ihre Rollen relevant sind. Weitere Details zur Berechnung der Punktzahlen findest du unten. Derzeit ist es notwendig dass alle Attribute sichtbar sind, was in Multiplayer-Spielen üblich ist, da die Spieler zwischen den Spielen keine Zeit haben, ihre Scouts zu verwalten.
 
 ![Screenshot des Dashboards](images/showcase.jpg)
+
+## CHANGELOG
+
+**24.11.2023**
+* Unterstützung für englische Spiellokalisierung hinzugefügt
+* Statistikbasierte Bewertungen, kombinierte Bewertungen, Statistiksets, Leistungsbewertung hinzugefügt
+* Viele Verbesserungen bei der Gewichtung von Attributen
+* Viele kleinere Korrekturen
+
 
 ## Installation, Start und Stopp
 
 ### Installation
-1. **Klone das Repository**: 
+**Option 1: Klone das Repository**
    - Wenn du mit Git vertraut bist, klone dieses Repository mit deiner bevorzugten Methode.
    - Für Neulinge in diesem Bereich folge diesen Schritten:
      - Lade Git von [git-scm.com](https://git-scm.com/downloads) herunter und installiere es.
-     - Öffne Git Bash und tippe `git clone [Repository-Link]`.
-2. **Download als ZIP**: 
+     - Rechtsklick in einem Ordner -> Git Bash öffnen
+     - Führe diesen Befehl aus: `git clone git@github.com:Svonn/FM-Svonnalytics-Dashboard.git`.
+
+**Option 2: Download als ZIP**: 
    - Alternativ kannst du dieses Repository als ZIP-Datei herunterladen.
    - Entpacke die Datei an deinem gewünschten Ort auf deinem Computer.
 

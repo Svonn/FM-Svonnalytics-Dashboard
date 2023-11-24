@@ -3,3 +3,5 @@ dash
 numpy
 lxml
 dash-bootstrap-components
+matplotlib
+scikit-learn

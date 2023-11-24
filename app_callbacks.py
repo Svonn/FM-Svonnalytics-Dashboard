@@ -1,4 +1,3 @@
-import html
 import json
 import os
 from dash.dependencies import Input, Output, MATCH, State
@@ -32,7 +31,7 @@ def set_aggregated_dfs(avg_club, max_club):
 
 def set_club_league_mapping(processed_data_frame):  
     global club_league_mapping  
-    club_league_mapping = processed_data_frame[['Verein', 'Liga']].drop_duplicates().set_index('Verein').to_dict()['Liga']  
+    club_league_mapping = processed_data_frame[['Club', 'Division']].drop_duplicates().set_index('Club').to_dict()['Division']  
   
 def register_callbacks(app: dash.Dash):
     @app.callback(

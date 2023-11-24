@@ -8,19 +8,32 @@
 
 
 ## What is this about?
-Welcome to the Scouting & Analytics Dashboard for Football Manager 2024, developed by me, Svonn. This tool was designed for "Veni Vidi Vici", an online multiplayer save game with over 30 human trainers. It calculates an overall score for players based on key attributes relevant to their roles. Further details on how scores are calculated are provided below. Currently, this dashboard is compatible with the German version of the game (23/24), with an English version coming soon. Currently, it requires all attributes to be revealed, which is usually the case in multiplayer saves, as players do not have time to manage their scouts between games.
+Welcome to the Scouting & Analytics Dashboard for Football Manager 2024, developed by me, Svonn. This tool was designed for "Veni Vidi Vici", an online multiplayer save game with over 30 human trainers. It calculates an overall score for players based on key attributes and statistics relevant to their roles. Further details on how scores are calculated are provided below. Currently, it requires all attributes to be revealed, which is usually the case in multiplayer saves, as players do not have time to manage their scouts between games.
 
 ![Dashboard Screenshot](images/showcase.jpg)
+
+
+## CHANGELOG
+
+**24.11.2023**
+* Added support for english game localization
+* Added statistics-based scores, combined scores, statistic sets, performance rating
+* Lots of attribute weighting improvements
+* Lots of minor fixes
+
+
 
 ## Installing, Starting, and Stopping
 
 ### Installation
-1. **Clone the Repository**: 
+   **Option 1: Clone the Repository** 
    - If you're familiar with Git, clone this repository using your preferred method.
    - For those new to this, follow these steps:
      - Download and install Git from [git-scm.com](https://git-scm.com/downloads).
-     - Open Git Bash and type `git clone [repository link]`.
-2. **Download as ZIP**: 
+     - Right click in a directory -> Open Git Bash 
+     - Run this command: `git clone git@github.com:Svonn/FM-Svonnalytics-Dashboard.git`.
+
+   **Option 2: Download as ZIP**
    - Alternatively, you can download this repository as a ZIP file.
    - Unzip the file to your desired location on your computer.
 
