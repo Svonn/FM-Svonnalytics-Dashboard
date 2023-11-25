@@ -65,6 +65,7 @@ def register_callbacks(app: dash.Dash):
 
         current_tab = parse_hash(hash_value)
 
+        role_tabs_content = dash.no_update
         ctx = callback_context
         if ctx.triggered and ctx.triggered[0]['prop_id'].split('.')[0] == "file-dropdown":
             if not selected_file:
@@ -76,8 +77,6 @@ def register_callbacks(app: dash.Dash):
             set_aggregated_dfs(avg_club, avg_max_club)
             set_processed_data_frame(processed_data_frame)
             role_tabs_content = create_tabs_content(filtered_role_weightings.keys())
-
-            return dash.no_update, dash.no_update, role_tabs_content
 
         if current_tab:
             role, view = current_tab
@@ -94,7 +93,7 @@ def register_callbacks(app: dash.Dash):
                     index = roles.index(role) * 5 + 5
                 else:
                     return "Content not found"
-                return tabs[index].children, tabs[index].label, dash.no_update
+                return tabs[index].children, tabs[index].label, role_tabs_content
             elif role == "aggregates":
                 aggregates_mapping = {
                     "club-score": 0,
@@ -104,11 +103,11 @@ def register_callbacks(app: dash.Dash):
                 }
                 index = aggregates_mapping.get(view)
                 if index is not None:
-                    return tabs[-4 + index].children, tabs[-4 + index].label, dash.no_update
+                    return tabs[-4 + index].children, tabs[-4 + index].label, role_tabs_content
                 else:
                     return "Aggregate not found"
 
-        return tabs[0].children, tabs[0].label, dash.no_update
+        return tabs[0].children, tabs[0].label, role_tabs_content
 
     @app.callback(
         Output({'type': 'dynamic-graph', 'index': MATCH}, 'figure'),
