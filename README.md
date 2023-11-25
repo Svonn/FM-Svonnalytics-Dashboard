@@ -15,6 +15,9 @@ Welcome to the Scouting & Analytics Dashboard for Football Manager 2024, develop
 
 ## CHANGELOG
 
+**25.11.2023**
+* Added support for HTML files that only include one or a few roles, now dynamically updates the available drop downs
+
 **24.11.2023**
 * Added support for english game localization
 * Added statistics-based scores, combined scores, statistic sets, performance rating

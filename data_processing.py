@@ -2,7 +2,7 @@ import json
 import math
 import numpy as np
 import pandas as pd
-from configurations import foot_rating_conversion, role_weightings, role_mapping, stat_sets
+from configurations import foot_rating_conversion, role_mapping, stat_sets, role_weightings
 import re
 from sklearn.preprocessing import PowerTransformer
 
@@ -77,7 +77,7 @@ def convert_stats_to_scores(squad_df, stat_sets, max_score=20, role=None):
     return zero_data
 
 
-def calculate_stat_set_scores(squad_df, stat_sets, max_score=20):
+def calculate_stat_set_scores(squad_df, stat_sets, filtered_role_weightings, max_score=20):
 
     new_scores = {}
     normalized_stats = convert_stats_to_scores(squad_df, stat_sets, max_score)
@@ -88,11 +88,11 @@ def calculate_stat_set_scores(squad_df, stat_sets, max_score=20):
         new_scores[set_name] = normalize_and_round(
             normalized_set_score, total_set_weight)
 
-    for role in role_weightings.keys():
+    for role in filtered_role_weightings.keys():
         normalized_stats_role = convert_stats_to_scores(
             squad_df, stat_sets, max_score, role)
         for set_name, stats in stat_sets.items():
-            if set_name in role_weightings[role].get('stats', {}):
+            if set_name in filtered_role_weightings[role].get('stats', {}):
                 role_set_score = calculate_score_with_malus(
                     normalized_stats_role, stats, threshold=0, max_score=max_score)
                 normalized_role_set_score = normalize_and_round(
@@ -102,8 +102,8 @@ def calculate_stat_set_scores(squad_df, stat_sets, max_score=20):
     return pd.concat([squad_df, pd.DataFrame(new_scores)], axis=1)
 
 
-def calculate_role_scores_based_on_stats(squad_df, role_weightings):
-    for role, config in role_weightings.items():
+def calculate_role_scores_based_on_stats(squad_df, filtered_role_weightings):
+    for role, config in filtered_role_weightings.items():
         if 'stats' in config:
             total_stat_weight = sum(config['stats'].values())
             role_stat_scores = np.sum(
@@ -131,8 +131,8 @@ def calculate_role_scores_based_on_stats(squad_df, role_weightings):
 
     return squad_df
 
-def calculate_combined_role_scores(squad_df, role_weightings):
-    for role in role_weightings.keys():
+def calculate_combined_role_scores(squad_df, filtered_role_weightings):
+    for role in filtered_role_weightings.keys():
         score_col = f'{role} (Score)'
         stats_col = f'{role} (Stats)'
         combined_col = f'{role} (Combined)'
@@ -141,8 +141,8 @@ def calculate_combined_role_scores(squad_df, role_weightings):
 
     return squad_df
 
-def calculate_performance(squad_df, role_weightings):
-    for role in role_weightings.keys():
+def calculate_performance(squad_df, filtered_role_weightings):
+    for role in filtered_role_weightings.keys():
         score_col = f'{role} (Score)'
         stats_col = f'{role} (Stats)'
         performance_col = f'{role} (Performance)'
@@ -154,6 +154,15 @@ def calculate_performance(squad_df, role_weightings):
             squad_df[performance_col].replace([np.inf, -np.inf], np.nan, inplace=True)
 
     return squad_df
+
+def filter_role_weightings(squad_df, role_weightings):
+    filtered_role_weightings = {}
+
+    for role in role_weightings.keys():
+        if can_play_role(squad_df, role).any():
+            filtered_role_weightings[role] = role_weightings[role]
+            
+    return filtered_role_weightings
 
 
 def process_file(file_path):
@@ -190,22 +199,26 @@ def process_file(file_path):
     right_foot_scores = squad_df['Right Foot'].map(foot_rating_conversion)
     squad_df['WeakFoot'] = np.minimum(left_foot_scores, right_foot_scores)
 
+
+    filtered_role_weightings = filter_role_weightings(squad_df, role_weightings)
+
+
     new_scores = {}
-    for role, config in role_weightings.items():
+    for role, config in filtered_role_weightings.items():
         total_weighting = sum(config['attributes'].values())
         new_scores[f'{role} (Score)'] = normalize_and_round(calculate_score_with_malus(
             squad_df, config['attributes'], threshold=14), total_weighting)
 
     squad_df = pd.concat([squad_df, pd.DataFrame(new_scores)], axis=1)
 
-    squad_df = calculate_stat_set_scores(squad_df, stat_sets)
-    squad_df = calculate_role_scores_based_on_stats(squad_df, role_weightings)
-    squad_df = calculate_combined_role_scores(squad_df, role_weightings)
-    squad_df = calculate_performance(squad_df, role_weightings)
+    squad_df = calculate_stat_set_scores(squad_df, stat_sets, filtered_role_weightings)
+    squad_df = calculate_role_scores_based_on_stats(squad_df, filtered_role_weightings)
+    squad_df = calculate_combined_role_scores(squad_df, filtered_role_weightings)
+    squad_df = calculate_performance(squad_df, filtered_role_weightings)
 
-    role_columns = [f'{role} (Score)' for role in role_weightings.keys()]
+    role_columns = [f'{role} (Score)' for role in filtered_role_weightings.keys()]
     stat_columns = [f'{set_name}' for set_name in stat_sets.keys()]
-    role_stat_columns = [f'{role} (Stats)' for role in role_weightings.keys()]
+    role_stat_columns = [f'{role} (Stats)' for role in filtered_role_weightings.keys()]
     squad_df['Best Rating'] = squad_df[role_columns].max(axis=1)
     squad_df['Best Role'] = squad_df[role_columns].idxmax(axis=1)
 
@@ -221,13 +234,13 @@ def process_file(file_path):
     ]
     columns_to_display.extend(all_attributes)
     
-    columns_to_display.extend([f'{role} (Combined)' for role in role_weightings.keys()])
-    columns_to_display.extend([f'{role} (Performance)' for role in role_weightings.keys()])
+    columns_to_display.extend([f'{role} (Combined)' for role in filtered_role_weightings.keys()])
+    columns_to_display.extend([f'{role} (Performance)' for role in filtered_role_weightings.keys()])
 
     # Add role-specific stat set columns
-    for role in role_weightings.keys():
+    for role in filtered_role_weightings.keys():
         for set_name in stat_sets.keys():
-            if set_name in role_weightings[role].get('stats', {}):
+            if set_name in filtered_role_weightings[role].get('stats', {}):
                 role_specific_column = f'{set_name} ({role})'
                 if role_specific_column in squad_df.columns:
                     columns_to_display.append(role_specific_column)
@@ -235,20 +248,20 @@ def process_file(file_path):
     print(
         f"Processing time: {round((pd.Timestamp.now() - start_ts).total_seconds(), 2)} seconds")
     print("Data points: ", len(squad_df))
-    return squad_df[columns_to_display]
+    return squad_df[columns_to_display], filtered_role_weightings
 
 
-def get_relevant_columns(role):
+def get_relevant_columns(role, filtered_role_weightings):
     fixed_columns = [
         'Name', 'Club', 'Age', 'Transfer Value', 'Wage', 'Starting 11', 'Average Rating', 'Best Role',
         'Best Rating', 'Division', 'Position', 'Personality', 'Media-Style', 'Left Foot', 'Right Foot'
     ]
 
     if role == "all":
-        role_score_columns = [f'{r} (Score)' for r in role_weightings.keys()]
-        role_stat_columns = [f'{r} (Stats)' for r in role_weightings.keys()]
+        role_score_columns = [f'{r} (Score)' for r in filtered_role_weightings.keys()]
+        role_stat_columns = [f'{r} (Stats)' for r in filtered_role_weightings.keys()]
         all_stat_set_columns = [set_name for set_name in stat_sets.keys()]
-        role_combined_columns = [f'{role} (Combined)' for role in role_weightings.keys()]
+        role_combined_columns = [f'{role} (Combined)' for role in filtered_role_weightings.keys()]
         alternating_role_columns = [item for pair in zip(
             role_score_columns, role_stat_columns, role_combined_columns) for item in pair]
 
@@ -258,7 +271,7 @@ def get_relevant_columns(role):
         role_stat_score_column = f'{role} (Stats)'
         role_combined_column = f'{role} (Combined)'
         role_performance_column = f'{role} (Performance)'
-        relevant_stat_sets = role_weightings[role].get('stats', {})
+        relevant_stat_sets = filtered_role_weightings[role].get('stats', {})
         role_specific_stat_set_columns = [
             f'{set_name} ({role})' for set_name in relevant_stat_sets]
 

@@ -1,7 +1,7 @@
 import json
 import os
 from dash.dependencies import Input, Output, MATCH, State
-from app_layout import create_tabs
+from app_layout import create_tabs, create_tabs_content
 from data_processing import  process_file  
 from visualization import create_sorted_bar_chart  
 from configurations import role_mapping
@@ -47,7 +47,7 @@ def register_callbacks(app: dash.Dash):
 
 
     @app.callback(
-        [Output("tab-content", "children"), Output("current-tab-label", "children")],
+        [Output("tab-content", "children"), Output("current-tab-label", "children"), Output('navbar-collapse', 'children')],
         [Input("url", "hash"), Input("file-dropdown", "value")],
         [State("directory-dropdown", "value")]
     )
@@ -69,12 +69,15 @@ def register_callbacks(app: dash.Dash):
         if ctx.triggered and ctx.triggered[0]['prop_id'].split('.')[0] == "file-dropdown":
             if not selected_file:
                 raise dash.exceptions.PreventUpdate
-            processed_data_frame = process_file(selected_file)
-            new_tabs, avg_club, avg_max_club = create_tabs(processed_data_frame)
+            processed_data_frame, filtered_role_weightings = process_file(selected_file)
+            new_tabs, avg_club, avg_max_club = create_tabs(processed_data_frame, filtered_role_weightings)
             set_club_league_mapping(processed_data_frame) 
             set_tabs(new_tabs)
             set_aggregated_dfs(avg_club, avg_max_club)
             set_processed_data_frame(processed_data_frame)
+            role_tabs_content = create_tabs_content(filtered_role_weightings.keys())
+
+            return dash.no_update, dash.no_update, role_tabs_content
 
         if current_tab:
             role, view = current_tab
@@ -91,7 +94,7 @@ def register_callbacks(app: dash.Dash):
                     index = roles.index(role) * 5 + 5
                 else:
                     return "Content not found"
-                return tabs[index].children, tabs[index].label
+                return tabs[index].children, tabs[index].label, dash.no_update
             elif role == "aggregates":
                 aggregates_mapping = {
                     "club-score": 0,
@@ -101,11 +104,11 @@ def register_callbacks(app: dash.Dash):
                 }
                 index = aggregates_mapping.get(view)
                 if index is not None:
-                    return tabs[-4 + index].children, tabs[-4 + index].label
+                    return tabs[-4 + index].children, tabs[-4 + index].label, dash.no_update
                 else:
                     return "Aggregate not found"
 
-        return tabs[0].children, tabs[0].label
+        return tabs[0].children, tabs[0].label, dash.no_update
 
     @app.callback(
         Output({'type': 'dynamic-graph', 'index': MATCH}, 'figure'),
