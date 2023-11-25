@@ -155,8 +155,14 @@ CALL "!REPO_ROOT!\Miniconda3\Scripts\activate.bat"
 SET "PATH=!REPO_ROOT!\Miniconda3;!REPO_ROOT!\Miniconda3\Scripts;!REPO_ROOT!\Miniconda3\Library\bin;!PATH!"
 
 :: Check if the environment is already created
-"!REPO_ROOT!\Miniconda3\Scripts\conda.exe" env list | findstr /C:"svonnalytics_env" >nul 2>&1
-IF !ERRORLEVEL! NEQ 0 (
+FOR /F "tokens=*" %%i IN ('"!REPO_ROOT!\Miniconda3\Scripts\conda.exe" info --envs') DO (
+    echo %%i | findstr /C:"svonnalytics_env" >nul 2>&1
+    IF !ERRORLEVEL! EQU 0 (
+        SET ENV_EXISTS=1
+    )
+)
+
+IF NOT DEFINED ENV_EXISTS (
     echo ^> Creating conda environment 'svonnalytics_env'...
     "!REPO_ROOT!\Miniconda3\Scripts\conda.exe" create --name svonnalytics_env python=3.12 --yes
     IF !ERRORLEVEL! NEQ 0 (
@@ -172,20 +178,16 @@ IF !ERRORLEVEL! NEQ 0 (
 :: Activate the environment
 CALL "!REPO_ROOT!\Miniconda3\Scripts\activate.bat" svonnalytics_env
 
-:: Install requirements if not already installed
-"!REPO_ROOT!\Miniconda3\Scripts\conda.exe" list -n svonnalytics_env | findstr /C:"dash" >nul 2>&1
+:: Install or update requirements from requirements.txt
+echo ^> Installing or updating requirements from requirements.txt...
+"!REPO_ROOT!\Miniconda3\Scripts\conda.exe" install --name svonnalytics_env -c conda-forge --file requirements.txt --yes
 IF !ERRORLEVEL! NEQ 0 (
-    echo ^> Installing requirements from requirements.txt...
-    "!REPO_ROOT!\Miniconda3\Scripts\conda.exe" install --name svonnalytics_env -c conda-forge --file requirements.txt --yes
-    IF !ERRORLEVEL! NEQ 0 (
-        echo Error installing requirements.
-        pause
-        exit /b !ERRORLEVEL!
-    )
-    echo ^> Requirements installed.
-) ELSE (
-    echo ^> Requirements already installed.
+    echo Error installing requirements.
+    pause
+    exit /b !ERRORLEVEL!
 )
+echo ^> Requirements installed or updated.
+
 
 :: Ask user for custom path or use default
 echo USER INPUT: Enter the path for FM24 export or press Enter to use the previous path:
