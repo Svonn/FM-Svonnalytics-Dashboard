@@ -13,6 +13,7 @@ Willkommen beim Scouting- & Analytics-Dashboard für Football Manager 2024, entw
 ## CHANGELOG
 
 **25.11.2023**
+* Neues Svonntastisches Installationsskript: Starte svonnalytics_dashboard.bat von irgendwo auf deinem Rechner und es erledigt den Rest!
 * Unterstützung für HTML-Dateien hinzugefügt in denen nicht alle Rollen (odern nur eine) vertreten sind. Die Dropdowns werden jetzt dyanmisch angepasst.
 
 
@@ -26,16 +27,21 @@ Willkommen beim Scouting- & Analytics-Dashboard für Football Manager 2024, entw
 ## Installation, Start und Stopp
 
 ### Installation
-**Option 1: Klone das Repository**
+
+**Option 1: Nutze den Installer**
+   Lass dieses Installationsskript die ganze Arbeit machen: [Download svonnalytics_dashboard.bat](https://github.com/Svonn/FM-Svonnalytics-Dashboard/releases/download/Alpha-1.0/svonnalytics_dashboard.bat)
+
+**Option 2: Klone das Repository**
    - Wenn du mit Git vertraut bist, klone dieses Repository mit deiner bevorzugten Methode.
    - Für Neulinge in diesem Bereich folge diesen Schritten:
      - Lade Git von [git-scm.com](https://git-scm.com/downloads) herunter und installiere es.
      - Rechtsklick in einem Ordner -> Git Bash öffnen
      - Führe diesen Befehl aus: `git clone git@github.com:Svonn/FM-Svonnalytics-Dashboard.git`.
 
-**Option 2: Download als ZIP**: 
+**Option 3: Download als ZIP**: 
    - Alternativ kannst du dieses Repository als ZIP-Datei herunterladen.
    - Entpacke die Datei an deinem gewünschten Ort auf deinem Computer.
+   - NICHT EMPFOHLEN: Auf diesem weg sind keine automatischen Updates des Installers möglich.
 
 ### Starten des Dashboards
 - Führe `svonnalytics_dashboard.bat` aus.
