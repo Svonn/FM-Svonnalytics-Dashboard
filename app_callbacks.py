@@ -58,7 +58,10 @@ def register_callbacks(app: dash.Dash):
     )
     def update_table(sort_by, table_id):
         role = table_id['index']
-        df = role_data_frames[role]
+        if role == "all":
+            df = processed_data_frame
+        else:
+            df = role_data_frames[role]
         if not sort_by:
             return df.to_dict('records')
         
