@@ -6,7 +6,7 @@
 > Ich hab das Readme mit GPT-4 aus dem Englischen übersetzt und auch das Readme war schon mit GPT-4 teilweise generiert. Kann also passieren dass irgendwo mal Quatsch steht falls es mir beim drüberlesen durchgerutscht ist. 
 
 ## Worum geht es?
-Willkommen beim Scouting- & Analytics-Dashboard für Football Manager 2024, entwickelt von mir, Svonn. Dieses Tool wurde für "Veni Vidi Vici", ein Online-Multiplayer-Spiel mit über 30 menschlichen Trainern, entworfen. Es berechnet eine Gesamtpunktzahl für Spieler basierend auf Schlüsselattributen und Statistiken, die für ihre Rollen relevant sind. Weitere Details zur Berechnung der Punktzahlen findest du unten. Derzeit ist es notwendig dass alle Attribute sichtbar sind, was in Multiplayer-Spielen üblich ist, da die Spieler zwischen den Spielen keine Zeit haben, ihre Scouts zu verwalten.
+Willkommen beim Scouting- & Analytics-Dashboard für Football Manager 2024, entwickelt von mir, Svonn. Dieses Tool wurde für "Veni Vidi Vici", ein Online-Multiplayer-Spiel mit über 30 menschlichen Trainern, entworfen. Es berechnet eine Gesamtpunktzahl für Spieler basierend auf Schlüsselattributen und Statistiken, die für ihre Rollen relevant sind. Weitere Details zur Berechnung der Punktzahlen findest du unten.
 
 ![Screenshot des Dashboards](images/showcase.jpg)
 
@@ -15,6 +15,7 @@ Willkommen beim Scouting- & Analytics-Dashboard für Football Manager 2024, entw
 **25.11.2023**
 * Neues Svonntastisches Installationsskript: Starte svonnalytics_dashboard.bat von irgendwo auf deinem Rechner und es erledigt den Rest!
 * Unterstützung für HTML-Dateien hinzugefügt in denen nicht alle Rollen (odern nur eine) vertreten sind. Die Dropdowns werden jetzt dyanmisch angepasst.
+* Ab jetzt werden auch Spielstände unterstützt bei denen die Attribute nicht aufgedeckt sind. Es werden die Unter- und Obergrenzen der geschätzen Werte verwendet!
 
 
 **24.11.2023**

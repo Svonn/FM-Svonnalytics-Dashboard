@@ -8,7 +8,7 @@
 
 
 ## What is this about?
-Welcome to the Scouting & Analytics Dashboard for Football Manager 2024, developed by me, Svonn. This tool was designed for "Veni Vidi Vici", an online multiplayer save game with over 30 human trainers. It calculates an overall score for players based on key attributes and statistics relevant to their roles. Further details on how scores are calculated are provided below. Currently, it requires all attributes to be revealed, which is usually the case in multiplayer saves, as players do not have time to manage their scouts between games.
+Welcome to the Scouting & Analytics Dashboard for Football Manager 2024, developed by me, Svonn. This tool was designed for "Veni Vidi Vici", an online multiplayer save game with over 30 human trainers. It calculates an overall score for players based on key attributes and statistics relevant to their roles. Further details on how scores are calculated are provided below.
 
 ![Dashboard Screenshot](images/showcase.jpg)
 
@@ -18,6 +18,7 @@ Welcome to the Scouting & Analytics Dashboard for Football Manager 2024, develop
 **25.11.2023**
 * New amazing installer: Run svonnalytics_dashboard.bat from anywhere, and it will make sure to get all the files you need!
 * Added support for HTML files that only include one or a few roles, now dynamically updates the available drop downs
+* Now supports save games with non-revealed attributes. It will now user the upper- and lower limits for the calculated score!
 
 **24.11.2023**
 * Added support for english game localization

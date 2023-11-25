@@ -29,9 +29,30 @@ def calculate_score_with_malus(data, weightings, threshold=14, max_score=20, inv
     total_score = sum(scores.values())
     return pd.Series(total_score)
 
+def calculate_score_range_with_malus(data, weightings, threshold=14):
+    scores_lower = {}
+    scores_upper = {}
+    for attribute_value, weight in weightings.items():
+        lower_range = np.array(data[f'{attribute_value}_lower'])
+        upper_range = np.array(data[f'{attribute_value}_upper'])
+        base = 1.3 + (weight * 0.1)
+        try:
+            lower_malus = np.where(lower_range < threshold, np.power(base, threshold - lower_range) - 1, 0)
+            upper_malus = np.where(upper_range < threshold, np.power(base, threshold - upper_range) - 1, 0)
+        except Exception as e:
+            print(f"Error in stat: {attribute_value}")
+            raise e
+
+        scores_lower[attribute_value + '_score'] = np.maximum(0, lower_range - lower_malus) * weight
+        scores_upper[attribute_value + '_score'] = np.maximum(0, upper_range - upper_malus) * weight
+
+    total_score_lower = sum(scores_lower.values())
+    total_score_upper = sum(scores_upper.values())
+    return pd.Series(total_score_lower), pd.Series(total_score_upper)
+
 
 def normalize_and_round(scores, total_weighting):
-    return np.round(scores / total_weighting, 2)
+    return np.round(scores / total_weighting, 1)
 
 
 def convert_stats_to_scores(squad_df, stat_sets, max_score=20, role=None):
@@ -116,7 +137,7 @@ def calculate_role_scores_based_on_stats(squad_df, filtered_role_weightings):
                     normalized_role_stat_score)
 
             # Scale the Stats scores
-            max_role_score = squad_df[f'{role} (Score)'].max()
+            max_role_score = squad_df[f'{role} (Average Score)'].max()
             min_stat_score = np.min(normalized_role_stat_score)
             max_stat_score = np.max(normalized_role_stat_score)
 
@@ -127,30 +148,30 @@ def calculate_role_scores_based_on_stats(squad_df, filtered_role_weightings):
             else:
                 scaled_role_stat_score = normalized_role_stat_score * max_role_score
 
-            squad_df[f'{role} (Stats)'] = np.round(scaled_role_stat_score, 2)
+            squad_df[f'{role} (Stats)'] = np.round(scaled_role_stat_score, 1)
 
     return squad_df
 
 def calculate_combined_role_scores(squad_df, filtered_role_weightings):
     for role in filtered_role_weightings.keys():
-        score_col = f'{role} (Score)'
+        score_col = f'{role} (Average Score)'
         stats_col = f'{role} (Stats)'
         combined_col = f'{role} (Combined)'
 
-        squad_df[combined_col] = np.round(squad_df[[score_col, stats_col]].mean(axis=1), 2)
+        squad_df[combined_col] = np.round(squad_df[[score_col, stats_col]].mean(axis=1), 1)
 
     return squad_df
 
 def calculate_performance(squad_df, filtered_role_weightings):
     for role in filtered_role_weightings.keys():
-        score_col = f'{role} (Score)'
+        score_col = f'{role} (Average Score)'
         stats_col = f'{role} (Stats)'
         performance_col = f'{role} (Performance)'
 
         # Calculate performance as Stats / Score * 100%
         # Replace division by zero with NaN
         with np.errstate(divide='ignore', invalid='ignore'):
-            squad_df[performance_col] = np.round((squad_df[stats_col] / squad_df[score_col]) * 100, 2)
+            squad_df[performance_col] = np.round((squad_df[stats_col] / squad_df[score_col]) * 100, 1)
             squad_df[performance_col].replace([np.inf, -np.inf], np.nan, inplace=True)
 
     return squad_df
@@ -164,6 +185,45 @@ def filter_role_weightings(squad_df, role_weightings):
             
     return filtered_role_weightings
 
+def process_column(col):
+    # Check if the column contains any '-' or range patterns
+    if col.str.contains('-').any() or col.eq('-').any():
+        # Handle the mix of Integers, Integer Ranges, and "-" cases
+        split_col = col.str.split('-', expand=True)
+        split_col[1].fillna(split_col[0], inplace=True)  # Duplicate integers where no range is present
+
+        # Replace empty strings (originally '-') with '1' for lower bound and '20' for upper bound
+        split_col[0] = split_col[0].replace({'': '1'}).fillna('1')
+        split_col[1] = split_col[1].replace({'': '20'}).fillna('20')
+    else:
+        # For columns with only integers, duplicate the column
+        split_col = pd.concat([col, col], axis=1)
+
+    # Convert to float
+    split_col = split_col.astype(float)
+
+    # Rename columns to lower and upper
+    split_col.columns = [f'{col.name}_lower', f'{col.name}_upper']
+
+    return split_col
+
+
+
+def calculate_weakfoot_score(squad_df):
+    def process_foot_rating(rating):
+        if rating == "-":
+            return (1, 20)
+        else:
+            return (foot_rating_conversion.get(rating, 0), foot_rating_conversion.get(rating, 0))
+
+    # Apply the processing to both left and right foot ratings
+    squad_df[['Left Foot_lower', 'Left Foot_upper']] = squad_df['Left Foot'].apply(
+        lambda x: process_foot_rating(x)).apply(pd.Series)
+    squad_df[['Right Foot_lower', 'Right Foot_upper']] = squad_df['Right Foot'].apply(
+        lambda x: process_foot_rating(x)).apply(pd.Series)
+    # Calculate the WeakFoot score as the minimum of left and right, for both lower and upper bounds
+    squad_df['WeakFoot_lower'] = squad_df[['Left Foot_lower', 'Right Foot_lower']].min(axis=1)
+    squad_df['WeakFoot_upper'] = squad_df[['Left Foot_upper', 'Right Foot_upper']].min(axis=1)
 
 def process_file(file_path):
     print()
@@ -178,8 +238,17 @@ def process_file(file_path):
 
     squad_df = squad_rawdata_list[0]
     squad_df.columns = custom_header
+    
+    attribute_columns = set()
+    for role_config in role_weightings.values():
+        attribute_columns.update(role_config['attributes'].keys())
 
+    # Skip the first 15 columns with regular string data
     for col in squad_df.columns[15:]:
+        if col in attribute_columns:
+            processed_cols = process_column(squad_df[col].astype(str))
+            squad_df = pd.concat([squad_df, processed_cols], axis=1)
+        
         if squad_df[col].dtype == 'object':
             if squad_df[col].str.contains('%').any():
                 squad_df[col] = squad_df[col].str.rstrip(
@@ -195,19 +264,24 @@ def process_file(file_path):
             squad_df[col] = pd.to_numeric(
                 squad_df[col], errors='coerce').fillna(0)
 
-    left_foot_scores = squad_df['Left Foot'].map(foot_rating_conversion)
-    right_foot_scores = squad_df['Right Foot'].map(foot_rating_conversion)
-    squad_df['WeakFoot'] = np.minimum(left_foot_scores, right_foot_scores)
-
-
+    calculate_weakfoot_score(squad_df)
     filtered_role_weightings = filter_role_weightings(squad_df, role_weightings)
-
 
     new_scores = {}
     for role, config in filtered_role_weightings.items():
         total_weighting = sum(config['attributes'].values())
-        new_scores[f'{role} (Score)'] = normalize_and_round(calculate_score_with_malus(
-            squad_df, config['attributes'], threshold=14), total_weighting)
+        worst_case_scores, best_case_scores = calculate_score_range_with_malus(squad_df, config['attributes'], threshold=14)
+        average_score = (worst_case_scores + best_case_scores) / 2
+        worst_case_scores = normalize_and_round(worst_case_scores, total_weighting)
+        best_case_scores = normalize_and_round(best_case_scores, total_weighting)
+        average_score = normalize_and_round(average_score, total_weighting)
+        combined_score = np.where(worst_case_scores == best_case_scores,
+                          best_case_scores.astype(str),
+                          worst_case_scores.astype(str) + " - " + best_case_scores.astype(str))
+
+        new_scores[f'{role} (Score)'] = combined_score
+        new_scores[f'{role} (Average Score)'] = average_score
+        
 
     squad_df = pd.concat([squad_df, pd.DataFrame(new_scores)], axis=1)
 
@@ -216,13 +290,15 @@ def process_file(file_path):
     squad_df = calculate_combined_role_scores(squad_df, filtered_role_weightings)
     squad_df = calculate_performance(squad_df, filtered_role_weightings)
 
-    role_columns = [f'{role} (Score)' for role in filtered_role_weightings.keys()]
+    role_score_range_columns = [f'{role} (Score)' for role in filtered_role_weightings.keys()]
+    role_score_average_columns = [f'{role} (Average Score)' for role in filtered_role_weightings.keys()]
     stat_columns = [f'{set_name}' for set_name in stat_sets.keys()]
     role_stat_columns = [f'{role} (Stats)' for role in filtered_role_weightings.keys()]
-    squad_df['Best Rating'] = squad_df[role_columns].max(axis=1)
-    squad_df['Best Role'] = squad_df[role_columns].idxmax(axis=1)
+    squad_df['Best Rating'] = squad_df[role_score_average_columns].max(axis=1)
+    squad_df['Best Role'] = squad_df[role_score_average_columns].idxmax(axis=1)
 
-    all_attributes = role_columns
+    all_attributes = role_score_range_columns
+    all_attributes.extend(role_score_average_columns)
     all_attributes.extend(['Starting 11', 'Average Rating'])
     all_attributes.extend(stat_columns)
     all_attributes.extend(role_stat_columns)
@@ -278,6 +354,12 @@ def get_relevant_columns(role, filtered_role_weightings):
         return fixed_columns[:7] + [role_score_column, role_stat_score_column, role_combined_column, role_performance_column] + role_specific_stat_set_columns + fixed_columns[7:]
 
 
+def get_hidden_columns(role, filtered_role_weightings):
+    columns = [f'{role} (Average Score)']
+    if role == "all":
+        columns = [f'{r} (Average Score)' for r in filtered_role_weightings.keys()]
+    return columns
+
 def parse_positions(position_string):
     positions = position_string.split(', ')
     all_positions = []
@@ -318,9 +400,9 @@ def compute_averages_and_max(filtered_dfs, roles):
     for role in roles:
         squad_data = filtered_dfs[role]
         avg_per_club_per_role[role] = squad_data.groupby(
-            'Club')[f'{role} (Score)'].mean().to_dict()
+            'Club')[f'{role} (Average Score)'].mean().to_dict()
         max_per_club_per_role[role] = squad_data.groupby(
-            'Club')[f'{role} (Score)'].max().to_dict()
+            'Club')[f'{role} (Average Score)'].max().to_dict()
     return avg_per_club_per_role, max_per_club_per_role
 
 
@@ -332,9 +414,9 @@ def compute_league_averages(filtered_dfs, roles, avg_per_club_per_role, max_per_
     for role in roles:
         squad_data = filtered_dfs[role]
         avg_per_league_per_role[role] = squad_data.groupby(['Division', 'Club'])[
-            f'{role} (Score)'].mean().groupby('Division').mean().to_dict()
+            f'{role} (Average Score)'].mean().groupby('Division').mean().to_dict()
         max_per_league_per_role[role] = squad_data.groupby(['Division', 'Club'])[
-            f'{role} (Score)'].max().groupby('Division').mean().to_dict()
+            f'{role} (Average Score)'].max().groupby('Division').mean().to_dict()
         unique_clubs.update(squad_data['Club'].unique())
 
     avg_per_club = {club: pd.Series({role: avg_per_club_per_role[role].get(club, 0) for role in roles}).mean()

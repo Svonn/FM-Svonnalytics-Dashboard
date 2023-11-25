@@ -280,19 +280,19 @@ role_weightings = {
     },
 }
 
-role_weightings["WBL"] = role_weightings["WB"]
-role_weightings["WBR"] = role_weightings["WB"]
-del role_weightings["WB"]
-role_weightings["WL"] = role_weightings["W"]
-role_weightings["WR"] = role_weightings["W"]
-del role_weightings["W"]
-role_weightings["IWBR"] = role_weightings["IWB"]
-role_weightings["IWBL"] = role_weightings["IWB"]
-del role_weightings["IWB"]
-role_weightings["IWL"] = role_weightings["IW"]
-role_weightings["IWR"] = role_weightings["IW"]
-del role_weightings["IW"]
+roles_where_left_or_right_matters = ["WB", "W", "IWB", "IW"]
+new_role_weightings = {}
 
+for key, value in role_weightings.items():
+    if key in roles_where_left_or_right_matters:
+        left_key = key + "L"
+        right_key = key + "R"
+        new_role_weightings[left_key] = value
+        new_role_weightings[right_key] = value
+    else:
+        new_role_weightings[key] = value
+
+role_weightings = new_role_weightings
 foot_rating_conversion = {
     "Sehr stark": 20, "Stark": 16, "Gut": 12, "Passabel": 8, "Schwach": 4, "Sehr schwach": 0,
     "Very Strong": 20, "Strong": 16, "Fairly Strong": 12, "Reasonable": 8, "Weak": 4, "Very Weak": 0,

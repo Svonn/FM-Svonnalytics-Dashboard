@@ -2,7 +2,7 @@ import json
 import os
 from dash.dependencies import Input, Output, MATCH, State
 from app_layout import create_tabs, create_tabs_content
-from data_processing import  process_file  
+from data_processing import  precompute_filtered_dataframes, process_file  
 from visualization import create_sorted_bar_chart  
 from configurations import role_mapping
 import dash  
@@ -12,12 +12,17 @@ club_league_mapping = None  # Initialize as None, will be set by calling functio
 roles = list(role_mapping.keys())  
 tabs = None
 processed_data_frame = None
+role_data_frames = None
 avg_per_club = None
 avg_max_per_club = None
 
 def set_processed_data_frame(p):
     global processed_data_frame
     processed_data_frame = p
+    
+def set_role_data_frames(p):
+    global role_data_frames
+    role_data_frames = p    
 
 def set_tabs(t):
     global tabs
@@ -47,6 +52,28 @@ def register_callbacks(app: dash.Dash):
 
 
     @app.callback(
+        Output({'type': 'dynamic-datatable', 'index': MATCH}, 'data'),
+        Input({'type': 'dynamic-datatable', 'index': MATCH}, 'sort_by'),
+        State({'type': 'dynamic-datatable', 'index': MATCH}, 'id'),
+    )
+    def update_table(sort_by, table_id):
+        role = table_id['index']
+        df = role_data_frames[role]
+        if not sort_by:
+            return df.to_dict('records')
+        
+        col_id = sort_by[0]['column_id']
+        direction = sort_by[0]['direction']
+
+        if col_id.endswith('(Score)'):
+            col_id = col_id.replace('(Score)', '(Average Score)')
+
+        sorted_df = df.sort_values(by=col_id, ascending=(direction == 'asc'))
+        return sorted_df.to_dict('records')
+
+
+
+    @app.callback(
         [Output("tab-content", "children"), Output("current-tab-label", "children"), Output('navbar-collapse', 'children')],
         [Input("url", "hash"), Input("file-dropdown", "value")],
         [State("directory-dropdown", "value")]
@@ -71,11 +98,13 @@ def register_callbacks(app: dash.Dash):
             if not selected_file:
                 raise dash.exceptions.PreventUpdate
             processed_data_frame, filtered_role_weightings = process_file(selected_file)
-            new_tabs, avg_club, avg_max_club = create_tabs(processed_data_frame, filtered_role_weightings)
+            role_dfs = precompute_filtered_dataframes(processed_data_frame, roles)
+            set_role_data_frames(role_dfs)
+            set_processed_data_frame(processed_data_frame)
+            new_tabs, avg_club, avg_max_club = create_tabs(processed_data_frame, role_dfs, filtered_role_weightings)
+            set_aggregated_dfs(avg_club, avg_max_club)
             set_club_league_mapping(processed_data_frame) 
             set_tabs(new_tabs)
-            set_aggregated_dfs(avg_club, avg_max_club)
-            set_processed_data_frame(processed_data_frame)
             role_tabs_content = create_tabs_content(filtered_role_weightings.keys())
 
         if current_tab:

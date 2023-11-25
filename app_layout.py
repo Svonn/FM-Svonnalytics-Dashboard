@@ -1,18 +1,15 @@
 import time
 import dash_bootstrap_components as dbc
 from dash import dcc, html, dash_table
-from data_processing import compute_averages_and_max, compute_league_averages, compute_overall_league_scores, get_relevant_columns, precompute_filtered_dataframes
+from data_processing import compute_averages_and_max, compute_league_averages, compute_overall_league_scores, get_hidden_columns, get_relevant_columns, precompute_filtered_dataframes
 from visualization import create_sorted_bar_chart
-from configurations import role_mapping
 
 
-def create_tabs(processed_data_frame, filtered_role_weightings):
+def create_tabs(processed_data_frame, role_dfs, filtered_role_weightings):
     start_ts = time.time()
 
     tabs = []
     roles = list(filtered_role_weightings.keys())
-
-    role_dfs = precompute_filtered_dataframes(processed_data_frame, roles)
     avg_per_club_per_role, max_per_club_per_role = compute_averages_and_max(
         role_dfs, roles)
     avg_per_league_per_role, max_per_league_per_role, avg_per_club, avg_max_per_club = compute_league_averages(
@@ -29,16 +26,22 @@ def create_tabs(processed_data_frame, filtered_role_weightings):
 
     # All Players Tab
     relevant_columns = get_relevant_columns("all", filtered_role_weightings)
+    hidden_columns = get_hidden_columns("all", filtered_role_weightings)
     df_general_stats = processed_data_frame[relevant_columns]
+    df_hidden_stats = processed_data_frame[hidden_columns]
     tabs.append(create_data_table_tab('All Players',
-                df_general_stats, 'tab-all-players', 'Best Rating'))
+                df_general_stats, df_hidden_stats, "all", 'Best Rating'))
 
     # Role-specific Tabs
     for role in roles:
         relevant_columns = get_relevant_columns(role, filtered_role_weightings)
+        hidden_columns = get_hidden_columns(role, filtered_role_weightings)
+
         df_role_specific_stats = role_dfs[role][relevant_columns]
+        df_role_specific_hidden_stats = role_dfs[role][hidden_columns]
+
         tabs.append(create_data_table_tab(
-            f'{role.upper()} Players', df_role_specific_stats, f'tab-{role}-players', f'{role} (Score)'))
+            f'{role.upper()} Players', df_role_specific_stats, df_role_specific_hidden_stats, role, f'{role} (Score)'))
 
         # Adding visualizations for each role
         tabs.extend(create_visualization_tabs(role, avg_per_club_per_role[role], max_per_club_per_role[role],
@@ -60,16 +63,23 @@ def create_tabs(processed_data_frame, filtered_role_weightings):
 # Helper functions for creating tabs
 
 
-def create_data_table_tab(label, dataframe, tab_id, sort_column):
+def create_data_table_tab(label, df, hidden_df, role, sort_column):
     data_table = dash_table.DataTable(
-        data=dataframe.to_dict('records'),
+        data=df.to_dict('records'),
+        id={'type': 'dynamic-datatable', 'index': role},
         columns=[
             {
                 'name': i,
                 'id': i,
                 'type': 'text',
                 'presentation': 'input',
-            } for i in dataframe.columns
+            } for i in df.columns
+        ]+ [
+            {
+                'name': i, 
+                'id': i,
+                'hideable': True
+            } for i in hidden_df.columns
         ],
         fixed_columns={'headers': True, 'data': 1},
         fixed_rows={'headers': True},
@@ -84,13 +94,13 @@ def create_data_table_tab(label, dataframe, tab_id, sort_column):
             'textAlign': 'center',
         },
         filter_action='native',
-        sort_action='native',
+        sort_action='custom',
         sort_mode='single',
         # Default sorting
         sort_by=[{'column_id': sort_column, 'direction': 'desc'}],
         page_size=25,
     )
-    return dcc.Tab(id=tab_id, label=label, children=[data_table])
+    return dcc.Tab(id=f'tab-{role}-players', label=label, children=[data_table])
 
 
 def create_visualization_tabs(role, club_avg, club_max, league_avg, league_max_avg):
@@ -258,14 +268,14 @@ def create_app_layout(app, html_export_path):
     current_tab_label = html.Div(
         id='current-tab-label',
         className='ms-3',  # Add some left margin to separate it from the delimiter
-        style={'color': 'white'}
+        style={'color': 'white', 'width': '10%'}
     )
 
     navbar_collapse = dbc.Collapse(
         children=dbc.Nav([], className="ms-auto", navbar=True),
         id="navbar-collapse",
         navbar=True,
-        style={'marginLeft': '200px'},
+        style={'marginRight': "75px", 'width': "50%"},
     )
 
     navbar = dbc.Navbar(
@@ -283,9 +293,10 @@ def create_app_layout(app, html_export_path):
                         dbc.NavItem(file_dropdown),
                     ],
                     # Use d-flex to apply flexbox properties
-                    className="align-items-center d-flex",
+                    className="me-auto",
                     navbar=True,
-                    style={'marginLeft': '25px'}
+                    style={'marginLeft': '25px'},
+                    
                 ),
                 current_tab_label,
                 navbar_collapse
