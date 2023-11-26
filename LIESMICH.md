@@ -12,6 +12,9 @@ Willkommen beim Scouting- & Analytics-Dashboard für Football Manager 2024, entw
 
 ## CHANGELOG
 
+**26.11.2023**
+* Jetzt mit Unterstützung für Filter bei den Spalten Gehalt und Transferwert. Dabei werden sogar kurzformen wie >10Mio oder <= 100k unterstützt!
+
 **25.11.2023**
 * Neues Svonntastisches Installationsskript: Starte svonnalytics_dashboard.bat von irgendwo auf deinem Rechner und es erledigt den Rest!
 * Unterstützung für HTML-Dateien hinzugefügt in denen nicht alle Rollen (odern nur eine) vertreten sind. Die Dropdowns werden jetzt dyanmisch angepasst.
