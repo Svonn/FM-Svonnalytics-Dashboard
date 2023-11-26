@@ -81,6 +81,7 @@ def create_data_table_tab(label, df, hidden_df, role, sort_column):
                 'hideable': True
             } for i in hidden_df.columns
         ],
+        hidden_columns=[i for i in hidden_df.columns],
         fixed_columns={'headers': True, 'data': 1},
         fixed_rows={'headers': True},
         style_table={'height': 'auto',
@@ -93,7 +94,7 @@ def create_data_table_tab(label, df, hidden_df, role, sort_column):
         style_header={
             'textAlign': 'center',
         },
-        filter_action='native',
+        filter_action='custom',
         sort_action='custom',
         sort_mode='single',
         # Default sorting

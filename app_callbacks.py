@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from dash.dependencies import Input, Output, MATCH, State
 from app_layout import create_tabs, create_tabs_content
 from data_processing import  precompute_filtered_dataframes, process_file  
@@ -9,12 +10,16 @@ import dash
 from dash import callback_context
 
 club_league_mapping = None  # Initialize as None, will be set by calling function  
-roles = list(role_mapping.keys())  
+roles = None
 tabs = None
 processed_data_frame = None
 role_data_frames = None
 avg_per_club = None
 avg_max_per_club = None
+
+def set_roles(r):
+    global roles
+    roles = r 
 
 def set_processed_data_frame(p):
     global processed_data_frame
@@ -50,30 +55,82 @@ def register_callbacks(app: dash.Dash):
         files = os.listdir(selected_directory)
         return [{'label': file, 'value': os.path.join(selected_directory, file)} for file in files]
 
-
     @app.callback(
         Output({'type': 'dynamic-datatable', 'index': MATCH}, 'data'),
-        Input({'type': 'dynamic-datatable', 'index': MATCH}, 'sort_by'),
-        State({'type': 'dynamic-datatable', 'index': MATCH}, 'id'),
+        [Input({'type': 'dynamic-datatable', 'index': MATCH}, 'sort_by'),
+        Input({'type': 'dynamic-datatable', 'index': MATCH}, 'filter_query')],
+        [State({'type': 'dynamic-datatable', 'index': MATCH}, 'id')]
     )
-    def update_table(sort_by, table_id):
+    def update_table(sort_by, filter_query, table_id):
         role = table_id['index']
         if role == "all":
             df = processed_data_frame
         else:
             df = role_data_frames[role]
-        if not sort_by:
-            return df.to_dict('records')
-        
-        col_id = sort_by[0]['column_id']
-        direction = sort_by[0]['direction']
 
-        if col_id.endswith('(Score)'):
-            col_id = col_id.replace('(Score)', '(Average Score)')
+        # Handle filtering
+        if filter_query:
+            filter_query = filter_query.replace(' s', ' ')
+            filtering_expressions = filter_query.split(' && ')
+            for filter_part in filtering_expressions:
+                col_name, operator, filter_value = split_filter_part(filter_part)
 
-        sorted_df = df.sort_values(by=col_id, ascending=(direction == 'asc'))
-        return sorted_df.to_dict('records')
+                # Substitute column names if necessary
+                if col_name.endswith('(Score)'):
+                    col_name = col_name.replace('(Score)', '(Average Score)')
 
+                if col_name.endswith('Value') and not col_name.startswith('Full'):
+                    col_name = f"Full {col_name}"
+                    
+                if col_name == "Wage":
+                    col_name = "Wage numerical"
+                    
+                if isinstance(filter_value, str) and ("Wage" in col_name or "Value" in col_name) :
+                    filter_value = filter_value.lower().replace("k", "e3").replace("mio", "e6").replace("m", "e6")
+                   
+                if operator == 'contains':
+                    query_string = f"`{col_name}`.str.contains('{filter_value}')"
+                else:
+                    query_string = f"`{col_name}` {operator} {filter_value}"
+                print(f"Executing query: {query_string}")
+                df = df.query(query_string)
+                
+
+        # Handle sorting
+        if sort_by:
+            col_id = sort_by[0]['column_id']
+            direction = sort_by[0]['direction']
+
+            if col_id.endswith('(Score)'):
+                col_id = col_id.replace('(Score)', '(Average Score)')
+
+            if col_id.endswith('Value'):
+                col_id = f"Full {col_id}"
+
+            if col_id == "Wage":
+                    col_id = "Wage numerical"
+
+            df = df.sort_values(by=col_id, ascending=(direction == 'asc'))
+            
+        records = df.to_dict('records')
+        return records
+
+
+    def split_filter_part(filter_part):
+        """Utility function to split the filter expression into parts"""
+        operators = ['>= ', '<= ', '>', '<', '!= ', '= ', ' contains ']
+        for operator in operators:
+            if operator in filter_part:
+                name_part, value_part = filter_part.split(operator, 1)
+                name = name_part[name_part.find('{') + 1: name_part.rfind('}')]
+                # Remove leading and trailing whitespaces from column name and value
+                name = name.strip()
+                value_part = value_part.strip()
+                # If value is numeric, convert it
+                if value_part.replace('.', '', 1).isdigit():
+                    value_part = float(value_part)
+                return name, operator.strip(), value_part
+        return [None] * 3
 
 
     @app.callback(
@@ -101,6 +158,7 @@ def register_callbacks(app: dash.Dash):
             if not selected_file:
                 raise dash.exceptions.PreventUpdate
             processed_data_frame, filtered_role_weightings = process_file(selected_file)
+            set_roles(list(filtered_role_weightings.keys()))
             role_dfs = precompute_filtered_dataframes(processed_data_frame, roles)
             set_role_data_frames(role_dfs)
             set_processed_data_frame(processed_data_frame)
@@ -124,7 +182,7 @@ def register_callbacks(app: dash.Dash):
                 elif view == "max-club-averages":
                     index = roles.index(role) * 5 + 5
                 else:
-                    return "Content not found"
+                    index = 0
                 return tabs[index].children, tabs[index].label, role_tabs_content
             elif role == "aggregates":
                 aggregates_mapping = {

@@ -185,7 +185,7 @@ def filter_role_weightings(squad_df, role_weightings):
             
     return filtered_role_weightings
 
-def process_column(col):
+def process_attribute_column(col):
     # Check if the column contains any '-' or range patterns
     if col.str.contains('-').any() or col.eq('-').any():
         # Handle the mix of Integers, Integer Ranges, and "-" cases
@@ -207,6 +207,43 @@ def process_column(col):
 
     return split_col
 
+def process_transfer_value(value):
+    if value == "Not for Sale" or value == "Steht nicht zum Verkauf":
+        return np.inf, np.inf, "∞", "∞"
+    if value == "Unknown" or value == "Unbekannt":
+        return np.nan, np.nan, "Unbekannt", "Unbekannt"
+    currency_symbols_regex = r'[\$\£\€\¥\₹\₩\₪\₺\₦\₡\₴\₲\₱\฿\₫\₭\₼\₽\₾\₸\៛\₠\₢\₣\₤\₥\₦\₧\₨\₩\₪\₫\€\₭\₮\₯\₰\₱\₲\₳\₴\₵\₶\₷\₸\₹\₺\₻\₼\₽\₾\₿\₽\﷼\￦]+'
+    full_value = re.sub(currency_symbols_regex, "", value).replace("K", "e3").replace("Mio", "e6").replace("M", "e6")
+
+    if '-' in value:
+        full_lower, full_upper = full_value.split(" - ")
+        lower, upper = value.split(" - ")
+        return float(eval(full_lower)), float(eval(full_upper)), lower, upper
+    else:
+        full_value = float(eval(full_value))
+        return full_value, full_value, value, value
+
+def process_transfer_value_column(col):
+    split_col = col.apply(lambda x: process_transfer_value(x)).apply(pd.Series)
+    split_col.columns = ['Full Min Value', 'Full Max Value', 'Min Value', 'Max Value']
+    return split_col
+
+def process_wage(value):
+    if value in ["n.a.", "N/A", "-"]:
+        return 0
+
+    # Regular expression to extract the numeric value
+    regex = r'(\d[\d\s\.,]*)'
+    match = re.search(regex, value)
+    if not match:
+        return 0
+
+    numeric_value = match.group(1)
+    numeric_value = re.sub(r'[^\d.]', '', numeric_value)
+    return float(numeric_value)
+
+def process_wage_column(col):
+    return col.apply(process_wage)
 
 
 def calculate_weakfoot_score(squad_df):
@@ -246,7 +283,7 @@ def process_file(file_path):
     # Skip the first 15 columns with regular string data
     for col in squad_df.columns[15:]:
         if col in attribute_columns:
-            processed_cols = process_column(squad_df[col].astype(str))
+            processed_cols = process_attribute_column(squad_df[col].astype(str))
             squad_df = pd.concat([squad_df, processed_cols], axis=1)
         
         if squad_df[col].dtype == 'object':
@@ -264,6 +301,10 @@ def process_file(file_path):
             squad_df[col] = pd.to_numeric(
                 squad_df[col], errors='coerce').fillna(0)
 
+
+    squad_df[['Full Min Value', 'Full Max Value', 'Min Value', 'Max Value']] = process_transfer_value_column(squad_df['Transfer Value'])
+    squad_df['Wage numerical'] = process_wage_column(squad_df['Wage'])
+    
     calculate_weakfoot_score(squad_df)
     filtered_role_weightings = filter_role_weightings(squad_df, role_weightings)
 
@@ -303,15 +344,15 @@ def process_file(file_path):
     all_attributes.extend(stat_columns)
     all_attributes.extend(role_stat_columns)
 
-    columns_to_display = [
-        'Name', 'Age', 'Club', 'Division', 'Transfer Value', 'Wage', 'Position',
+    columns_to_include = [
+        'Name', 'Age', 'Club', 'Division', 'Full Min Value', 'Full Max Value', 'Min Value', 'Max Value', 'Wage', 'Wage numerical', 'Position',
         'Personality', 'Media-Style', 'Left Foot', 'Right Foot', 'Best Role',
         'Best Rating'
     ]
-    columns_to_display.extend(all_attributes)
+    columns_to_include.extend(all_attributes)
     
-    columns_to_display.extend([f'{role} (Combined)' for role in filtered_role_weightings.keys()])
-    columns_to_display.extend([f'{role} (Performance)' for role in filtered_role_weightings.keys()])
+    columns_to_include.extend([f'{role} (Combined)' for role in filtered_role_weightings.keys()])
+    columns_to_include.extend([f'{role} (Performance)' for role in filtered_role_weightings.keys()])
 
     # Add role-specific stat set columns
     for role in filtered_role_weightings.keys():
@@ -319,17 +360,17 @@ def process_file(file_path):
             if set_name in filtered_role_weightings[role].get('stats', {}):
                 role_specific_column = f'{set_name} ({role})'
                 if role_specific_column in squad_df.columns:
-                    columns_to_display.append(role_specific_column)
+                    columns_to_include.append(role_specific_column)
 
     print(
         f"Processing time: {round((pd.Timestamp.now() - start_ts).total_seconds(), 2)} seconds")
     print("Data points: ", len(squad_df))
-    return squad_df[columns_to_display], filtered_role_weightings
+    return squad_df[columns_to_include], filtered_role_weightings
 
 
 def get_relevant_columns(role, filtered_role_weightings):
     fixed_columns = [
-        'Name', 'Club', 'Age', 'Transfer Value', 'Wage', 'Starting 11', 'Average Rating', 'Best Role',
+        'Name', 'Club', 'Age', 'Min Value', 'Max Value', 'Wage', 'Starting 11', 'Average Rating', 'Best Role',
         'Best Rating', 'Division', 'Position', 'Personality', 'Media-Style', 'Left Foot', 'Right Foot'
     ]
 
@@ -341,7 +382,7 @@ def get_relevant_columns(role, filtered_role_weightings):
         alternating_role_columns = [item for pair in zip(
             role_score_columns, role_stat_columns, role_combined_columns) for item in pair]
 
-        return fixed_columns[:9] + alternating_role_columns + all_stat_set_columns + fixed_columns[9:]
+        return fixed_columns[:10] + alternating_role_columns + all_stat_set_columns + fixed_columns[10:]
     else:
         role_score_column = f'{role} (Score)'
         role_stat_score_column = f'{role} (Stats)'
@@ -351,13 +392,14 @@ def get_relevant_columns(role, filtered_role_weightings):
         role_specific_stat_set_columns = [
             f'{set_name} ({role})' for set_name in relevant_stat_sets]
 
-        return fixed_columns[:7] + [role_score_column, role_stat_score_column, role_combined_column, role_performance_column] + role_specific_stat_set_columns + fixed_columns[7:]
+        return fixed_columns[:8] + [role_score_column, role_stat_score_column, role_combined_column, role_performance_column] + role_specific_stat_set_columns + fixed_columns[8:]
 
 
 def get_hidden_columns(role, filtered_role_weightings):
     columns = [f'{role} (Average Score)']
     if role == "all":
         columns = [f'{r} (Average Score)' for r in filtered_role_weightings.keys()]
+    columns.extend(['Full Min Value', 'Full Max Value', 'Wage numerical'])
     return columns
 
 def parse_positions(position_string):
