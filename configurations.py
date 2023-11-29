@@ -70,8 +70,9 @@ role_mapping = {
     'IWBR': ['V(R)', 'D(R)'],
     'WBL': ['V(L)', 'FV(L)', 'D(L)', 'WB(L)'],
     'IWBL': ['V(L)', 'D(L)'],
-    'DM': ['DM'],
-    'SV': ['DM'],
+    'DM/BeM': ['DM', 'M(Z)', 'M(C)'],
+    'MC': ['M(Z)', 'M(C)'],
+    'SV/B2B': ['DM', 'M(Z)', 'M(C)'],
     'PM': ['DM', 'M(Z)', 'OM(Z)', 'M(C)', 'AM(C)'],
     'AM': ['M(Z)', 'OM(Z)', 'M(C)', 'AM(C)'],
     'WR': ['M(R)', 'OM(R)', 'AM(R)'],
@@ -87,11 +88,11 @@ role_weightings = {
             # Technisch
             'Reflexes': 3, 'Aerial Reach': 2, 'Command Of Area': 2, 'Communication': 2, 'Handling': 2, 'One On Ones': 2, 'Passing': 1, 'Throwing': 1,
             # Mental
-            'Anticipation': 2, 'Composure': 2, 'Concentration': 2, 'Decisions': 2, 'Positioning': 1, 'Vision': 1,
+            'Anticipation': 2, 'Composure': 2, 'Concentration': 2, 'Decisions': 2, 'Positioning': 1, 'Vision': 1, 'Determination': 1,
             # Physisch
             'Agility': 3, 'Jumping Reach': 1, 'Balance': 1, 'Acceleration': 1,
             # WeakFoot
-            'WeakFoot': 1
+            'WeakFoot': 0.2
         },
         'stats': {
             'Goalkeeping': 3,
@@ -101,13 +102,13 @@ role_weightings = {
     'CD': {
         'attributes': {
             # Technisch
-            'Tackling': 3, 'Marking': 3, 'Heading': 1, 'Passing': 1, 'First Touch': 1,
+            'Tackling': 2, 'Marking': 2, 'Dribbling': 2, 'Heading': 2, 'Passing': 1, 'First Touch': 1, 
             # Mental
-            'Anticipation': 2, 'Bravery': 2, 'Composure': 2, 'Concentration': 2, 'Positioning': 2, 'Decisions': 1,
+            'Anticipation': 3, 'Bravery': 3, 'Composure': 3, 'Concentration': 2, 'Positioning': 2, 'Decisions': 1, 'Determination': 1,
             # Physisch
-            'Pace': 4, 'Jumping Reach': 4, 'Acceleration': 4, 'Strength': 3, 'Agility': 2, 'Balance': 2,
+            'Pace': 6, 'Jumping Reach': 6, 'Acceleration': 6, 'Strength': 3, 'Agility': 3, 'Balance': 3,
             # WeakFoot
-            'WeakFoot': 1
+            'WeakFoot': 0.2
         },
         'stats': {
             'Defensive Play': 10,
@@ -118,11 +119,11 @@ role_weightings = {
     'WB': {
         'attributes': {
             # Technisch
-            'Crossing': 3, 'Dribbling': 3, 'Passing': 2, 'First Touch': 2, 'Tackling': 1, 'Marking': 0.5,
+            'Dribbling': 6, 'Crossing': 3,  'Passing': 1, 'First Touch': 1, 'Tackling': 1, 'Marking': 0.5,
             # Mental
-            'Decisions': 3, 'Work Rate': 3, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1, 'Positioning': 1, 'Teamwork': 1, 'Aggression': 1, 'Off The Ball': 1,
+            'Work Rate': 3, 'Decisions': 2, 'Off The Ball': 2, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1, 'Positioning': 1, 'Teamwork': 1, 'Aggression': 1,  'Determination': 1,
             # Physisch
-            'Pace': 4, 'Acceleration': 4, 'Agility': 1, 'Stamina': 2, 'Strength': 1, 'Balance': 1,
+            'Pace': 6, 'Acceleration': 6, 'Jumping Reach': 3, 'Agility': 3, 'Balance': 3, 'Stamina': 2,  'Strength': 2, 
         },
         'stats': {
             'Wing Play': 8,
@@ -135,13 +136,13 @@ role_weightings = {
     'IWB': {
         'attributes': {
             # Technisch
-            'Passing': 4, 'First Touch': 4, 'Marking': 2, 'Tackling': 2, 'Technique': 1,
+            'Passing': 2, 'First Touch': 2, 'Marking': 1, 'Tackling': 1, 'Technique': 0.5,
             # Mental
-            'Teamwork': 4, 'Decisions': 4,  'Composure': 3, 'Positioning': 2, 'Work Rate': 2, 'Aggression': 2, 'Off The Ball': 2, 'Anticipation': 2, 'Concentration': 1,
+            'Decisions': 2,  'Composure': 2, 'Positioning': 2, 'Work Rate': 2, 'Aggression': 2, 'Off The Ball': 2, 'Anticipation': 2, 'Concentration': 2, 'Teamwork': 1,  'Determination': 1,
             # Physisch
-            'Jumping Reach': 1, 'Strength': 1, 'Acceleration': 2, "Pace": 2, 'Stamina': 1,
+            'Acceleration': 4, "Pace": 4,'Jumping Reach': 2, 'Strength': 2, 'Agility': 2, 'Balance': 2,  'Stamina': 1,
             # WeakFoot
-            'WeakFoot': 1
+            'WeakFoot': 0.2
         },
         'stats': {
             'Build-up Play': 8,
@@ -151,14 +152,14 @@ role_weightings = {
             'Wing Play': 1,
         }
     },
-    'DM': {
+    'DM/BeM': {
         'attributes': {
             # Technisch
-            'Tackling': 2, 'Passing': 2, 'First Touch': 2, 'Marking': 2,
+            'Tackling': 2, 'First Touch': 2, 'Marking': 1, 'Passing': 1, 
             # Mental
-            'Work Rate': 3, 'Aggression': 4, 'Teamwork': 2, 'Positioning': 2, 'Anticipation': 2, 'Bravery': 2, 'Concentration': 2, 'Decisions': 1, 'Composure': 1, 'Off The Ball': 1,
+            'Work Rate': 3, 'Aggression': 3, 'Composure': 2, 'Positioning': 2, 'Anticipation': 2, 'Bravery': 2, 'Concentration': 2, 'Teamwork': 1,  'Decisions': 1,  'Off The Ball': 1, 'Determination': 1,
             # Physisch
-            'Jumping Reach': 2, 'Strength': 2, 'Stamina': 1, 'Acceleration': 1, "Pace": 1,
+             'Acceleration': 4, "Pace": 4,'Jumping Reach': 4, 'Strength': 3, 'Agility': 2, 'Balance': 2,  'Stamina': 1,
         },
         'stats': {
             'Defensive Play': 5,
@@ -166,14 +167,14 @@ role_weightings = {
             'Pressing': 2,
         }
     },
-    'SV': {
+    'SV/B2B': {
         'attributes': {
             # Technisch
-            'Passing': 4, 'Dribbling': 4, 'Long Shots': 2, 'First Touch': 4, 'Technique': 3, 'Finishing': 2, 'Tackling': 1, 'Marking': 1,
+            'Dribbling': 4, 'First Touch': 3, 'Long Shots': 1,  'Technique': 1, 'Finishing': 1, 'Tackling': 1, 'Marking': 1, 'Passing': 1,
             # Mental
-            'Off The Ball': 4, 'Work Rate': 3, 'Vision': 2, 'Decisions': 3, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1, 'Teamwork': 2, 'Positioning': 1, 'Concentration': 1,
+            'Off The Ball': 3, 'Work Rate': 3, 'Vision': 2, 'Decisions': 2, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1, 'Teamwork': 1, 'Positioning': 1, 'Concentration': 1, 'Determination': 1,
             # Physisch
-            'Pace': 4, 'Acceleration': 4, 'Stamina': 2, 'Balance': 2, 'Agility': 2,
+            'Pace': 6, 'Acceleration': 6, 'Jumping Reach': 3, 'Stamina': 2, 'Balance': 2, 'Agility': 2,
         },
         'stats': {
             'Build-up Play': 8,
@@ -184,16 +185,34 @@ role_weightings = {
             'Pressing': 1,
         }
     },
+    'MC': {
+        'attributes': {
+            # Technisch
+            'Dribbling': 2, 'First Touch': 2, 'Tackling': 1,  'Passing': 1, 'Marking': 0.5, 'Technique': 0.5,
+            # Mental
+            'Off The Ball': 2, 'Work Rate': 2, 'Vision': 1, 'Decisions': 1, 'Anticipation': 0.5, 'Composure': 1, 'Concentration': 1, 'Teamwork': 0.5, 'Positioning': 1, 'Concentration': 1, 'Determination': 1,
+            # Physisch
+            'Pace': 2, 'Acceleration': 2, 'Jumping Reach': 1, 'Stamina': 1, 'Balance': 1, 'Agility': 1,
+        },
+        'stats': {
+            'Build-up Play': 6,
+            'Creation': 4,
+            'Presence': 4,
+            'Defensive Play': 4,
+            'Goal Scoring': 2,
+            'Pressing': 2,
+        }
+    },
     'PM': {
         'attributes': {
             # Technisch
-            'Passing': 5, 'First Touch': 4, 'Dribbling': 1, 'Technique': 3, 'Finishing': 1, 'Long Shots': 1,
+            'Passing': 2, 'First Touch': 2, 'Dribbling': 2, 'Technique': 1, 'Finishing': 0.5, 'Long Shots': 0.5,
             # Mental
-            'Vision': 5, 'Off The Ball': 4,  'Decisions': 4, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1,
+            'Vision': 3, 'Off The Ball': 3,  'Decisions': 3, 'Anticipation': 2, 'Composure': 2, 'Concentration': 2, 'Determination': 1,
             # Physisch
-            'Balance': 2, 'Agility': 2, 'Pace': 1, 'Acceleration': 1,
+            'Pace': 4, 'Acceleration': 4, 'Jumping Reach': 2, 'Stamina': 2, 'Balance': 3, 'Agility': 3,
             # WeakFoot
-            'WeakFoot': 1
+            'WeakFoot': 0.2
         },
         'stats': {
             'Build-up Play': 8,
@@ -206,13 +225,13 @@ role_weightings = {
     'AM': {
         'attributes': {
             # Technisch
-            'Passing': 2, 'Dribbling': 2, 'Technique': 2, 'Finishing': 2, 'Long Shots': 2, 'First Touch': 2,
+            'Dribbling': 3, 'First Touch': 2, 'Passing': 1, 'Technique': 1, 'Finishing': 1, 'Long Shots': 1, 
             # Mental
-            'Off The Ball': 3, 'Vision': 2, 'Decisions': 2, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1,
+            'Off The Ball': 2, 'Vision': 1, 'Decisions': 1, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1, 'Determination': 1,
             # Physisch
-            'Pace': 3, 'Acceleration': 3, 'Balance': 2, 'Agility': 2,
+            'Pace': 5, 'Acceleration': 5, 'Jumping Reach': 2, 'Stamina': 2, 'Balance': 3, 'Agility': 3,
             # WeakFoot
-            'WeakFoot': 1
+            'WeakFoot': 0.2
         },
         'stats': {
             'Creation': 8,
@@ -225,13 +244,13 @@ role_weightings = {
     'W': {
         'attributes': {
             # Technisch
-            'Dribbling': 3, 'Crossing': 3, 'Passing': 2, 'Technique': 2, 'Finishing': 1, 'Long Shots': 1, 'First Touch': 1,
+            'Dribbling': 5, 'Crossing': 2, 'Passing': 1, 'Technique': 1, 'Finishing': 1, 'Long Shots': 1, 'First Touch': 2,
             # Mental
-            'Off The Ball': 3, 'Work Rate': 2, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1, 'Decisions': 1, 'Vision': 1,
+            'Off The Ball': 3, 'Work Rate': 3, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1, 'Decisions': 1, 'Vision': 1, 'Determination': 1,
             # Physisch
-            'Pace': 4, 'Acceleration': 4, 'Agility': 2, 'Balance': 2,
+            'Pace': 8, 'Acceleration': 8, 'Jumping Reach': 3, 'Stamina': 2, 'Balance': 4, 'Agility': 4,
             # WeakFoot
-            'WeakFoot': 1
+            'WeakFoot': 0.2
         },
         'stats': {
             'Wing Play': 8,
@@ -244,13 +263,13 @@ role_weightings = {
     'IW': {
         'attributes': {
             # Technisch
-            'Dribbling': 3, 'Passing': 2, 'Technique': 2,  'Finishing': 2, 'Long Shots': 2, 'First Touch': 1, 'Crossing': 1,
+            'Dribbling': 5, 'Crossing': 1, 'Passing': 1, 'Technique': 1, 'Finishing': 2, 'Long Shots': 2, 'First Touch': 2,
             # Mental
-            'Off The Ball': 3, 'Work Rate': 2, 'Anticipation': 1, 'Composure': 1, 'Concentration': 1, 'Decisions': 1, 'Vision': 1,
+            'Off The Ball': 3, 'Work Rate': 3, 'Anticipation': 1, 'Composure': 2, 'Concentration': 1, 'Decisions': 1, 'Vision': 1, 'Determination': 1,
             # Physisch
-            'Pace': 4, 'Acceleration': 4, 'Agility': 2, 'Balance': 2,
+            'Pace': 8, 'Acceleration': 8, 'Jumping Reach': 3, 'Stamina': 2, 'Balance': 4, 'Agility': 4,
             # WeakFoot
-            'WeakFoot': 1
+            'WeakFoot': 0.2
         },
         'stats': {
             'Creation': 8,
@@ -263,13 +282,13 @@ role_weightings = {
     'ST': {
         'attributes': {
             # Technisch
-            'Finishing': 3, 'Dribbling': 1, 'Heading': 2, 'Passing': 1, 'Technique': 1,
+            'Dribbling': 5, 'Finishing': 2,  'Heading': 2,
             # Mental
-            'Off The Ball': 3, 'Anticipation': 3, 'Composure': 2, 'Concentration': 1, 'Decisions': 1,
+            'Off The Ball': 3, 'Anticipation': 3, 'Composure': 2, 'Concentration': 1, 'Decisions': 1, 'Determination': 1,
             # Physisch
-            'Acceleration': 6, 'Pace': 6, 'Jumping Reach': 4, 'Agility': 2, 'Balance': 4, 'Strength': 2,
+            'Pace': 8, 'Acceleration': 8, 'Jumping Reach': 6, 'Stamina': 2, 'Balance': 4, 'Agility': 4,
             # WeakFoot
-            'WeakFoot': 1
+            'WeakFoot': 0.2
         },
         'stats': {
             'Goal Scoring': 10,

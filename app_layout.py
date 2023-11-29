@@ -73,6 +73,7 @@ def create_data_table_tab(label, df, hidden_df, role, sort_column):
                 'id': i,
                 'type': 'text',
                 'presentation': 'input',
+                'hideable': True
             } for i in df.columns
         ]+ [
             {
