@@ -452,7 +452,7 @@ def compute_averages_and_max(filtered_dfs, roles):
     return avg_per_club_per_role, max_per_club_per_role
 
 
-def compute_league_averages(filtered_dfs, roles, avg_per_club_per_role, max_per_club_per_role):
+def compute_league_averages(processed_data_frame, filtered_dfs, roles):
     avg_per_league_per_role = {}
     max_per_league_per_role = {}
     unique_clubs = set()
@@ -465,29 +465,32 @@ def compute_league_averages(filtered_dfs, roles, avg_per_club_per_role, max_per_
             f'{role} (Average Score)'].max().groupby('Division').mean().to_dict()
         unique_clubs.update(squad_data['Club'].unique())
 
-    avg_per_club = {club: pd.Series({role: avg_per_club_per_role[role].get(club, 0) for role in roles}).mean()
+    avg_per_club = {club: processed_data_frame[processed_data_frame['Club'] == club]['Best Rating'].mean()
                     for club in unique_clubs}
 
-    avg_max_per_club = {club: pd.Series({role: max_per_club_per_role[role].get(club, 0) for role in roles}).mean()
+    avg_max_per_club = {club: processed_data_frame[processed_data_frame['Club'] == club]['Best Rating'].nlargest(11).mean()
                         for club in unique_clubs}
-
+    
     return avg_per_league_per_role, max_per_league_per_role, avg_per_club, avg_max_per_club
 
 
-def compute_overall_league_scores(data_frame, roles, avg_per_club_per_role, max_per_club_per_role):
+def compute_overall_league_scores(processed_data_frame):
     avg_per_league = {}
     avg_of_max_per_club_per_role_per_league = {}
-    for league in data_frame['Division'].unique():
-        league_data = data_frame[data_frame['Division'] == league]
-        club_averages = []
-        club_best_averages = []
-        for club in league_data['Club'].unique():
-            club_averages.append(pd.Series(
-                {role: avg_per_club_per_role[role].get(club, 0) for role in roles}).mean())
-            club_best_averages.append(pd.Series(
-                {role: max_per_club_per_role[role].get(club, 0) for role in roles}).mean())
+
+    for league in processed_data_frame['Division'].unique():
+        league_data = processed_data_frame[processed_data_frame['Division'] == league]
+
+        # Calculate the average 'Best Rating' for each club in the league
+        club_averages = [league_data[league_data['Club'] == club]['Best Rating'].mean()
+                         for club in league_data['Club'].unique()]
+
+        # Calculate the average of the top 11 'Best Ratings' for each club in the league
+        club_best_averages = [league_data[league_data['Club'] == club]['Best Rating'].nlargest(11).mean()
+                              for club in league_data['Club'].unique()]
+
+        # Average these values for the entire league
         avg_per_league[league] = pd.Series(club_averages).mean()
-        avg_of_max_per_club_per_role_per_league[league] = pd.Series(
-            club_best_averages).mean()
+        avg_of_max_per_club_per_role_per_league[league] = pd.Series(club_best_averages).mean()
 
     return avg_per_league, avg_of_max_per_club_per_role_per_league

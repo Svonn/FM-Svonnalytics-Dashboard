@@ -10,14 +10,10 @@ def create_tabs(processed_data_frame, role_dfs, filtered_role_weightings):
 
     tabs = []
     roles = list(filtered_role_weightings.keys())
-    avg_per_club_per_role, max_per_club_per_role = compute_averages_and_max(
-        role_dfs, roles)
-    avg_per_league_per_role, max_per_league_per_role, avg_per_club, avg_max_per_club = compute_league_averages(
-        role_dfs, roles, avg_per_club_per_role, max_per_club_per_role)
-    avg_per_league, avg_of_max_per_club_per_role_per_league = compute_overall_league_scores(
-        processed_data_frame, roles, avg_per_club_per_role, max_per_club_per_role)
-    print(
-        f"Calculating scores took {round(time.time() - start_ts, 2)} seconds")
+    avg_per_club_per_role, max_per_club_per_role = compute_averages_and_max(role_dfs, roles)
+    avg_per_league_per_role, max_per_league_per_role, avg_per_club, avg_max_per_club = compute_league_averages(processed_data_frame, role_dfs, roles)
+    avg_per_league, avg_of_max_per_club_per_role_per_league = compute_overall_league_scores(processed_data_frame)
+    print(f"Calculating scores took {round(time.time() - start_ts, 2)} seconds")
 
     # Common dropdown options
     league_options = [{'label': league, 'value': league}
