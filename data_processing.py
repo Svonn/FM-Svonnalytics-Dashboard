@@ -64,7 +64,7 @@ def convert_stats_to_scores(squad_df, stat_sets, max_score=20, role=None):
         filtered_df = squad_df
 
     percentile = filtered_df['Starting 11'].quantile(0.4)
-    min_starting_11 = max(3, min(10, math.ceil(percentile)))
+    min_starting_11 = min(10, math.ceil(percentile))
     # Filter the data to include only players above this threshold
     filtered_data = filtered_df[filtered_df['Starting 11'] >= min_starting_11]
     all_stats = list(set([stat for set_stats in stat_sets.values()
@@ -200,7 +200,11 @@ def process_attribute_column(col):
         split_col = pd.concat([col, col], axis=1)
 
     # Convert to float
-    split_col = split_col.astype(float)
+    try:
+        split_col = split_col.astype(float)
+    except ValueError:
+        print(f"Error converting column {col.name} to float")
+        raise
 
     # Rename columns to lower and upper
     split_col.columns = [f'{col.name}_lower', f'{col.name}_upper']
