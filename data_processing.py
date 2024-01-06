@@ -29,13 +29,13 @@ def calculate_score_with_malus(data, weightings, threshold=14, max_score=20, inv
     total_score = sum(scores.values())
     return pd.Series(total_score)
 
-def calculate_score_range_with_malus(data, weightings, threshold=14):
+def calculate_score_range_with_malus(data, weightings, threshold=12):
     scores_lower = {}
     scores_upper = {}
     for attribute_value, weight in weightings.items():
         lower_range = np.array(data[f'{attribute_value}_lower'])
         upper_range = np.array(data[f'{attribute_value}_upper'])
-        base = 1.3 + (weight * 0.1)
+        base = 1.25 + (weight * 0.1)
         try:
             lower_malus = np.where(lower_range < threshold, np.power(base, threshold - lower_range) - 1, 0)
             upper_malus = np.where(upper_range < threshold, np.power(base, threshold - upper_range) - 1, 0)
@@ -274,12 +274,10 @@ def process_file(file_path):
     with open(header_json_path, 'r', encoding="utf-8") as f:
         custom_header = json.load(f)
 
-    squad_rawdata_list = pd.read_html(file_path, header=None, skiprows=[
-                                      0], encoding="utf-8", keep_default_na=False)
+    squad_rawdata_list = pd.read_html(file_path, header=None, encoding="utf-8", keep_default_na=False)
 
     squad_df = squad_rawdata_list[0]
     squad_df.columns = custom_header
-    
     attribute_columns = set()
     for role_config in role_weightings.values():
         attribute_columns.update(role_config['attributes'].keys())
