@@ -5,3 +5,7 @@ lxml
 dash-bootstrap-components
 matplotlib
 scikit-learn
+tqdm
+jupyterlab
+openai
+opencv-python

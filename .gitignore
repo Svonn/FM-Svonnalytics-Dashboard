@@ -1,3 +1,5 @@
+*.html
+
 Miniconda3/
 .vscode/
 *.exe
