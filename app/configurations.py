@@ -1,3 +1,28 @@
+column_mapping = {
+    # GK
+    'HB': 'Aerial Reach', 'STK': 'Command Of Area', 'KOM': 'Communication',
+    'HAL': 'Handling', '1V1': 'One On Ones',
+    'REF': 'Reflexes',
+    # Technisch
+    'FLA': 'Crossing', 'DRI': 'Dribbling', 'ABS': 'Finishing',
+    'ANN': 'First Touch', 'KPF': 'Heading', 'WS': 'Long Shots',
+    'DCK': 'Marking', 'PAS': 'Passing', 'TCK': 'Tackling',
+    'TEC': 'Technique',
+    # Mental
+    'AGG': 'Aggression', 'AZP': 'Anticipation', 'MUT': 'Bravery',
+    'NER': 'Composure', 'KON': 'Concentration', 'ENT': 'Decisions',
+    'ZIE': 'Determination', 'FLR': 'Flair', 'OHN': 'Off The Ball',
+    'STE': 'Positioning', 'TEA': 'Teamwork', 'ÜBS': 'Vision', 'ESF': 'Work Rate',
+    # Physisch
+    'ANT': 'Acceleration', 'BEW': 'Agility', 'BAL': 'Balance', 'SPR': 'Jumping Reach',
+    'GFT': 'Natural Fitness', 'SCH': 'Pace', 'AUS': 'Stamina', 'KRA': 'Strength',
+    # Other
+    'ALTER': 'Age', 'LINKER FUSS': 'Left Foot', 'RECHTER FUSS': 'Right Foot',
+    'PERSÖNLICHKEIT': 'Personality', 'MEDIENUMGANG': 'Media-Style', 'VEREIN': 'Club',
+    'TRANSFERWERT': 'Transfer Value', 'GEHALT': 'Wage', 'POSITION': 'Position', 'NAME': 'Name',
+}
+
+
 role_mapping = {
     'GK': ['TW', 'GK'],
     'BPD': ['V(Z)', 'D(C)'],
@@ -13,14 +38,13 @@ role_mapping = {
     'ST': ['ST(Z)', 'ST(C)'],
 }
 
-
 role_weightings = {
     'GK': {
         'attributes': {
             # Technisch
             'Aerial Reach': 100, 'Command Of Area': 40, 'Communication': 40,
-            'First Touch': 5, 'Handling': 10, 'Kicking': 0, 'One On Ones': 80,
-            'Passing': 5, 'Reflexes': 100, 'Throwing': 0, 'WeakFoot': 10,
+            'First Touch': 5, 'Handling': 10,  'One On Ones': 80,
+            'Passing': 5, 'Reflexes': 100, 'WeakFoot': 10,
             # Mental
             'Anticipation': 20, 'Bravery': 5, 'Composure': 30,
             'Concentration': 40, 'Decisions': 5, 'Determination': 5,
@@ -152,15 +176,15 @@ role_weightings = {
     'IAS': {
         'attributes': {
             # Technisch
-            'Crossing': 25, 'Dribbling': 40, 'Finishing': 20,
+            'Crossing': 25, 'Dribbling': 40, 'Finishing': 40,
             'First Touch': 10, 'Heading': 15, 'Long Shots': 10,
             'Marking': 0, 'Passing': 10, "Tackling": 0,
             'Technique': 15, 'WeakFoot': 15,
             # Mental
-            'Aggression': 0, 'Anticipation': 20, 'Bravery': 0,
+            'Aggression': 0, 'Anticipation': 20, 'Bravery': 10,
             'Composure': 25, 'Concentration': 25, 'Decisions': 15,
             'Determination': 10, 'Flair': 20, 'Off The Ball': 20,
-            'Positioning': 0, 'Teamwork': 10, 'Vision': 15, 'Work Rate': 10,
+            'Positioning': 0, 'Teamwork': 10, 'Vision': 15, 'Work Rate': 25,
             # Physisch
             'Acceleration': 100, 'Agility': 20, 'Balance': 20, 'Jumping Reach': 50,
             'Natural Fitness': 0, 'Pace': 100, 'Stamina': 5, 'Strength': 10,
@@ -169,17 +193,17 @@ role_weightings = {
     'ST': {
         'attributes': {
             # Technisch
-            'Crossing': 0, 'Dribbling': 30, 'Finishing': 25,
-            'First Touch': 15, 'Heading': 20, 'Long Shots': 5,
+            'Crossing': 0, 'Dribbling': 30, 'Finishing': 50,
+            'First Touch': 15, 'Heading': 25, 'Long Shots': 5,
             'Marking': 0, 'Passing': 5, "Tackling": 0,
             'Technique': 10, 'WeakFoot': 30,
             # Mental
-            'Aggression': 0, 'Anticipation': 10, 'Bravery': 5,
+            'Aggression': 0, 'Anticipation': 10, 'Bravery': 15,
             'Composure': 25, 'Concentration': 20, 'Decisions': 5,
-            'Determination': 10, 'Flair': 5, 'Off The Ball': 15,
-            'Positioning': 0, 'Teamwork': 5, 'Vision': 5, 'Work Rate': 5,
+            'Determination': 10, 'Flair': 10, 'Off The Ball': 15,
+            'Positioning': 0, 'Teamwork': 5, 'Vision': 5, 'Work Rate': 25,
             # Physisch
-            'Acceleration': 100, 'Agility': 20, 'Balance': 20, 'Jumping Reach': 100,
+            'Acceleration': 100, 'Agility': 20, 'Balance': 20, 'Jumping Reach': 70,
             'Natural Fitness': 0, 'Pace': 100, 'Stamina': 5, 'Strength': 20,
         }
     },

@@ -1,12 +1,10 @@
 import json
-import math
 import re
 
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import RobustScaler
 
-from configurations import foot_rating_conversion, role_mapping, role_weightings
+from configurations import foot_rating_conversion, role_mapping, role_weightings, column_mapping
 
 
 def calculate_rating_range_with_malus(data, weightings, threshold=15, factor=0.01):
@@ -132,12 +130,11 @@ def calculate_weak_foot_rating(squad_df):
 
 
 def process_file(file_path):
-    start_ts = pd.Timestamp.now()
     print(f"Processing file '{file_path}'")
     start_ts = pd.Timestamp.now()
 
     # Read the file to determine the mode based on column count
-    df = pd.read_html(file_path, header=None, encoding="utf-8", keep_default_na=False)[0]
+    df = pd.read_html(file_path, encoding="utf-8", keep_default_na=False)[0]
 
     if len(df.columns) == 60:
         print("Detected 'Versus' mode")
@@ -145,20 +142,20 @@ def process_file(file_path):
         header_json_path = '../data/header_vs.json'
         id_mapping_df = pd.read_csv('../data/id_name_mapping.csv')
         id_mapping_df['EID'] = id_mapping_df['EID'].astype(str)
-        skip_non_attr_rows = 16
     else:
-        print("Detected 'Regular' mode")
+        print("Detected regular mode")
         mode = 'regular'
-        header_json_path = '../data/header.json'
-        id_mapping_df = None
-        skip_non_attr_rows = 15
+        header_json_path = id_mapping_df = None
+        df.columns = df.columns.str.upper()
+        if "ABS.1" in df.columns:
+            print("WARNING: Duplicate ABS column detected")
+        new_column_mapping = {col: column_mapping.get(col, col) for col in df.columns}
+        df.rename(columns=new_column_mapping, inplace=True)
 
-    with open(header_json_path, 'r', encoding="utf-8") as f:
-        custom_header = json.load(f)
-    df = pd.read_html(file_path, header=None, encoding="utf-8", keep_default_na=False)
-
-    df = df[0]
-    df.columns = custom_header
+    if header_json_path:
+        with open(header_json_path, 'r', encoding="utf-8") as f:
+            custom_header = json.load(f)
+        df.columns = custom_header
     print(f"Reading file took: {round((pd.Timestamp.now() - start_ts).total_seconds(), 2)} seconds")
 
     if id_mapping_df is not None:
@@ -170,7 +167,7 @@ def process_file(file_path):
     for role_config in role_weightings.values():
         attribute_columns.update(role_config['attributes'].keys())
 
-    for col in df.columns[skip_non_attr_rows:]:
+    for col in df.columns:
         if col in attribute_columns:
             processed_cols = process_attribute_column(df[col].astype(str))
             df = pd.concat([df, processed_cols], axis=1)
@@ -216,7 +213,6 @@ def process_file(file_path):
     role_rating_columns = [col for col in df.columns if col.endswith('(Rating)')]
 
     for col in role_rating_columns:
-        # if col is convertible to float, convert it
         try:
             df[col] = df[col].astype(float)
         except ValueError:

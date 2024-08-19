@@ -30,8 +30,16 @@ def register_callbacks(app: dash.Dash):
         roles = list(filtered_role_weightings.keys())
         position_dropdown_options = [{'label': pos, 'value': pos} for pos in position_options]
         role_dropdown_options = [{'label': role, 'value': role} for role in roles]
-        nationality_options = [{'label': nat, 'value': nat} for nat in pd.concat([df['Nat 1'], df['Nat 2']]).unique()]
-        division_options = [{'label': div, 'value': div} for div in df['Division'].unique()]
+        # check if df has Nat 1 and Nat 2 columns
+        if 'Nat 1' in df.columns and 'Nat 2' in df.columns:
+            nationality_options = [{'label': nat, 'value': nat} for nat in pd.concat([df['Nat 1'], df['Nat 2']]).unique()]
+        else:
+            nationality_options = []
+
+        if 'Division' in df.columns:
+            division_options = [{'label': div, 'value': div} for div in df['Division'].unique()]
+        else:
+            division_options = []
         processed_data = df.to_json(date_format='iso', orient='split')
         return (position_dropdown_options, role_dropdown_options, nationality_options, division_options,
                 processed_data, filtered_role_weightings, mode, None, [], [], [])
