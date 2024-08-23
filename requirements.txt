@@ -8,4 +8,3 @@ scikit-learn
 tqdm
 jupyterlab
 openai
-opencv-python

@@ -1,7 +1,7 @@
 import dash  
 import dash_bootstrap_components as dbc  
-from app.app_layout import create_app_layout
-from app.app_callbacks import register_callbacks
+from app_layout import create_app_layout
+from app_callbacks import register_callbacks
 import argparse
 
 parser = argparse.ArgumentParser()

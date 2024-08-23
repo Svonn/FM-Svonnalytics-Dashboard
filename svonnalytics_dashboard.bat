@@ -8,7 +8,7 @@ SET "IS_GIT=false"
 SET "REPO_ROOT=%~dp0"
 
 :: Check if dash_app.py is in the same directory
-IF EXIST "!REPO_ROOT!\dash_app.py" (
+IF EXIST "!REPO_ROOT!\app\dash_app.py" (
     SET "IS_POPULATED=true"
 )
 
@@ -220,7 +220,7 @@ IF NOT EXIST "!CUSTOMPATH!" (
 
 :: Run the Dash app in a new window
 echo ^> Starting Dash application...
-start cmd /k "python dash_app.py --path "!CUSTOMPATH!""
+start cmd /k "python app/dash_app.py --path "!CUSTOMPATH!""
 
 :: Wait for 5 seconds to allow the server to start
 timeout /t 5 /nobreak >nul
