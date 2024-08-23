@@ -185,26 +185,23 @@ IF EXIST "prev_path.txt" (
     :: Ask user for custom path or use default
     echo USER INPUT: Enter the path for FM24 export or press Enter to use the previous path:
     SET "DEFAULTPATH=%USERPROFILE%\Documents\Sports Interactive\Football Manager 2024\exported_html"
-)
-
-set /p CUSTOMPATH="Path (default: %DEFAULTPATH%): "
-IF "!CUSTOMPATH!"=="" SET CUSTOMPATH=!DEFAULTPATH!
-echo ^> Selected path for the exported HTML files: !CUSTOMPATH!
-
-:: Save the selected path for next time
-< nul set /p="!CUSTOMPATH!" > prev_path.txt
-
-:: Create the directory if it doesn't exist
-IF NOT EXIST "!CUSTOMPATH!" (
-    mkdir "!CUSTOMPATH!"
-    IF !ERRORLEVEL! NEQ 0 (
-        echo Error creating directory. Please check your permissions or try again.
-        pause
-        exit /b !ERRORLEVEL!
+    set /p CUSTOMPATH="Path (default: %DEFAULTPATH%): "
+    IF "!CUSTOMPATH!"=="" SET CUSTOMPATH=!DEFAULTPATH!
+    echo ^> Selected path for the exported HTML files: !CUSTOMPATH!
+    :: Save the selected path for next time
+    < nul set /p="!CUSTOMPATH!" > prev_path.txt
+    :: Create the directory if it doesn't exist
+    IF NOT EXIST "!CUSTOMPATH!" (
+        mkdir "!CUSTOMPATH!"
+        IF !ERRORLEVEL! NEQ 0 (
+            echo Error creating directory. Please check your permissions or try again.
+            pause
+            exit /b !ERRORLEVEL!
+        )
+        echo ^> Directory created: !CUSTOMPATH!
+    ) ELSE (
+        echo ^> Directory already exists: !CUSTOMPATH!
     )
-    echo ^> Directory created: !CUSTOMPATH!
-) ELSE (
-    echo ^> Directory already exists: !CUSTOMPATH!
 )
 
 :: Run the Dash app in a new window
