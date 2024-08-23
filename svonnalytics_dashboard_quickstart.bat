@@ -181,8 +181,7 @@ CALL "!REPO_ROOT!\Miniconda3\Scripts\activate.bat" svonnalytics_env
 :: Check if previous path file exists
 IF EXIST "prev_path.txt" (
     FOR /F "delims=" %%i IN (prev_path.txt) DO SET "DEFAULTPATH=%%i"
-)
-ELSE (
+) ELSE (
     :: Ask user for custom path or use default
     echo USER INPUT: Enter the path for FM24 export or press Enter to use the previous path:
     SET "DEFAULTPATH=%USERPROFILE%\Documents\Sports Interactive\Football Manager 2024\exported_html"
