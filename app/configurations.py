@@ -20,6 +20,7 @@ column_mapping = {
     'ALTER': 'Age', 'LINKER FUSS': 'Left Foot', 'RECHTER FUSS': 'Right Foot',
     'PERSÖNLICHKEIT': 'Personality', 'MEDIENUMGANG': 'Media-Style', 'VEREIN': 'Club',
     'TRANSFERWERT': 'Transfer Value', 'GEHALT': 'Wage', 'POSITION': 'Position', 'NAME': 'Name',
+    'NATION': 'Nat 1', "2. NATION": 'Nat 2', 'LIGA': 'Division'
 }
 
 
