@@ -59,82 +59,82 @@ role_weightings = {
         'attributes': {
             # Technisch
             'Crossing': 0, 'Dribbling': 20, 'Finishing': 0,
-            'First Touch': 25, 'Heading': 25, 'Long Shots': 0,
-            'Marking': 30, 'Passing': 25, "Tackling": 30,
+            'First Touch': 25, 'Heading': 33, 'Long Shots': 0,
+            'Marking': 33, 'Passing': 25, "Tackling": 33,
             'Technique': 0, 'WeakFoot': 10,
             # Mental
-            'Aggression': 10, 'Anticipation': 10, 'Bravery': 25,
-            'Composure': 30, 'Concentration': 30, 'Decisions': 10,
+            'Aggression': 10, 'Anticipation': 10, 'Bravery': 33,
+            'Composure': 33, 'Concentration': 40, 'Decisions': 10,
             'Determination': 10, 'Flair': 0, 'Off The Ball': 0,
-            'Positioning': 20, 'Teamwork': 10, 'Vision': 10, 'Work Rate': 0,
+            'Positioning': 25, 'Teamwork': 10, 'Vision': 10, 'Work Rate': 0,
             # Physisch
-            'Acceleration': 100, 'Agility': 10, 'Balance': 20, 'Jumping Reach': 100,
-            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 10, 'Strength': 40,
+            'Acceleration': 100, 'Agility': 10, 'Balance': 25, 'Jumping Reach': 80,
+            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 20, 'Strength': 40,
         }
     },
     'LIB': {
         'attributes': {
             # Technisch
-            'Crossing': 0, 'Dribbling': 30, 'Finishing': 0,
-            'First Touch': 30, 'Heading': 25, 'Long Shots': 10,
-            'Marking': 25, 'Passing': 30, "Tackling": 30,
+            'Crossing': 0, 'Dribbling': 25, 'Finishing': 0,
+            'First Touch': 33, 'Heading': 33, 'Long Shots': 10,
+            'Marking': 25, 'Passing': 33, "Tackling": 33,
             'Technique': 10, 'WeakFoot': 20,
             # Mental
-            'Aggression': 10, 'Anticipation': 15, 'Bravery': 25,
+            'Aggression': 10, 'Anticipation': 20, 'Bravery': 33,
             'Composure': 40, 'Concentration': 40, 'Decisions': 20,
             'Determination': 10, 'Flair': 0, 'Off The Ball': 10,
-            'Positioning': 20, 'Teamwork': 20, 'Vision': 20, 'Work Rate': 10,
+            'Positioning': 25, 'Teamwork': 20, 'Vision': 20, 'Work Rate': 10,
             # Physisch
-            'Acceleration': 90, 'Agility': 20, 'Balance': 30, 'Jumping Reach': 100,
-            'Natural Fitness': 0, 'Pace': 90, 'Stamina': 10, 'Strength': 40,
+            'Acceleration': 100, 'Agility': 20, 'Balance': 33, 'Jumping Reach': 80,
+            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 20, 'Strength': 40,
         }
     },
     'FB': {
         'attributes': {
             # Technisch
-            'Crossing': 30, 'Dribbling': 40, 'Finishing': 0,
+            'Crossing': 40, 'Dribbling': 33, 'Finishing': 0,
             'First Touch': 20, 'Heading': 10, 'Long Shots': 5,
-            'Marking': 20, 'Passing': 20, "Tackling": 20,
+            'Marking': 25, 'Passing': 20, "Tackling": 25,
             'Technique': 20, 'WeakFoot': 10,
             # Mental
             'Aggression': 10, 'Anticipation': 20, 'Bravery': 10,
-            'Composure': 25, 'Concentration': 25, 'Decisions': 25,
-            'Determination': 10, 'Flair': 0, 'Off The Ball': 20,
-            'Positioning': 20, 'Teamwork': 10, 'Vision': 10, 'Work Rate': 20,
+            'Composure': 33, 'Concentration': 40, 'Decisions': 25,
+            'Determination': 10, 'Flair': 0, 'Off The Ball': 25,
+            'Positioning': 33, 'Teamwork': 20, 'Vision': 10, 'Work Rate': 25,
             # Physisch
-            'Acceleration': 100, 'Agility': 25, 'Balance': 25, 'Jumping Reach': 40,
-            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 20, 'Strength': 20,
+            'Acceleration': 100, 'Agility': 33, 'Balance': 33, 'Jumping Reach': 50,
+            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 33, 'Strength': 20,
         }
     },
     'WB': {
         'attributes': {
             # Technisch
-            'Crossing': 40, 'Dribbling': 40, 'Finishing': 10,
+            'Crossing': 50, 'Dribbling': 40, 'Finishing': 10,
             'First Touch': 15, 'Heading': 10, 'Long Shots': 10,
-            'Marking': 10, 'Passing': 15, "Tackling": 10,
+            'Marking': 20, 'Passing': 20, "Tackling": 20,
             'Technique': 20, 'WeakFoot': 15,
             # Mental
             'Aggression': 10, 'Anticipation': 25, 'Bravery': 5,
-            'Composure': 25, 'Concentration': 25, 'Decisions': 25,
-            'Determination': 10, 'Flair': 0, 'Off The Ball': 20,
-            'Positioning': 10, 'Teamwork': 10, 'Vision': 10, 'Work Rate': 20,
+            'Composure': 25, 'Concentration': 33, 'Decisions': 33,
+            'Determination': 20, 'Flair': 0, 'Off The Ball': 33,
+            'Positioning': 20, 'Teamwork': 20, 'Vision': 20, 'Work Rate': 40,
             # Physisch
-            'Acceleration': 100, 'Agility': 25, 'Balance': 25, 'Jumping Reach': 25,
-            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 20, 'Strength': 15,
+            'Acceleration': 100, 'Agility': 33, 'Balance': 33, 'Jumping Reach': 33,
+            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 40, 'Strength': 15,
         }
     },
     '6er': {
         'attributes': {
             # Technisch
-            'Crossing': 0, 'Dribbling': 30, 'Finishing': 5,
-            'First Touch': 40, 'Heading': 20, 'Long Shots': 20,
-            'Marking': 30, 'Passing': 40, "Tackling": 30,
-            'Technique': 20, 'WeakFoot': 30,
+            'Crossing': 0, 'Dribbling': 25, 'Finishing': 5,
+            'First Touch': 33, 'Heading': 10, 'Long Shots': 20,
+            'Marking': 33, 'Passing': 33, "Tackling": 33,
+            'Technique': 10, 'WeakFoot': 20,
             # Mental
-            'Aggression': 20, 'Anticipation': 30, 'Bravery': 20,
-            'Composure': 30, 'Concentration': 50, 'Decisions': 40,
-            'Determination': 20, 'Flair': 10, 'Off The Ball': 20,
-            'Positioning': 30, 'Teamwork': 30, 'Vision': 40, 'Work Rate': 40,
+            'Aggression': 20, 'Anticipation': 25, 'Bravery': 20,
+            'Composure': 33, 'Concentration': 50, 'Decisions': 33,
+            'Determination': 20, 'Flair': 10, 'Off The Ball': 25,
+            'Positioning': 33, 'Teamwork': 33, 'Vision': 25, 'Work Rate': 25,
             # Physisch
             'Acceleration': 100, 'Agility': 30, 'Balance': 40, 'Jumping Reach': 60,
             'Natural Fitness': 0, 'Pace': 100, 'Stamina': 25, 'Strength': 25,
@@ -143,69 +143,69 @@ role_weightings = {
     '8er': {
         'attributes': {
             # Technisch
-            'Crossing': 10, 'Dribbling': 40, 'Finishing': 30,
-            'First Touch': 40, 'Heading': 20, 'Long Shots': 40,
-            'Marking': 10, 'Passing': 40, "Tackling": 10,
-            'Technique': 20, 'WeakFoot': 30,
+            'Crossing': 10, 'Dribbling': 40, 'Finishing': 25,
+            'First Touch': 25, 'Heading': 10, 'Long Shots': 25,
+            'Marking': 10, 'Passing': 25, "Tackling": 20,
+            'Technique': 20, 'WeakFoot': 25,
             # Mental
             'Aggression': 20, 'Anticipation': 40, 'Bravery': 10,
-            'Composure': 30, 'Concentration': 50, 'Decisions': 50,
-            'Determination': 20, 'Flair': 20, 'Off The Ball': 40,
-            'Positioning': 10, 'Teamwork': 30, 'Vision': 50, 'Work Rate': 50,
+            'Composure': 25, 'Concentration': 40, 'Decisions': 50,
+            'Determination': 20, 'Flair': 10, 'Off The Ball': 40,
+            'Positioning': 20, 'Teamwork': 25, 'Vision': 50, 'Work Rate': 40,
             # Physisch
             'Acceleration': 100, 'Agility': 40, 'Balance': 40, 'Jumping Reach': 50,
-            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 25, 'Strength': 15,
+            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 33, 'Strength': 20,
         }
     },
     '10er': {
         'attributes': {
             # Technisch
-            'Crossing': 10, 'Dribbling': 30, 'Finishing': 20,
-            'First Touch': 20, 'Heading': 10, 'Long Shots': 20,
+            'Crossing': 10, 'Dribbling': 33, 'Finishing': 25,
+            'First Touch': 25, 'Heading': 10, 'Long Shots': 20,
             'Marking': 0, 'Passing': 20, "Tackling": 0,
-            'Technique': 10, 'WeakFoot': 10,
+            'Technique': 20, 'WeakFoot': 20,
             # Mental
-            'Aggression': 0, 'Anticipation': 20, 'Bravery': 0,
-            'Composure': 20, 'Concentration': 25, 'Decisions': 25,
-            'Determination': 10, 'Flair': 25, 'Off The Ball': 20,
-            'Positioning': 0, 'Teamwork': 10, 'Vision': 30, 'Work Rate': 10,
+            'Aggression': 0, 'Anticipation': 33, 'Bravery': 0,
+            'Composure': 25, 'Concentration': 33, 'Decisions': 50,
+            'Determination': 10, 'Flair': 25, 'Off The Ball': 25,
+            'Positioning': 0, 'Teamwork': 20, 'Vision': 40, 'Work Rate': 20,
             # Physisch
-            'Acceleration': 100, 'Agility': 40, 'Balance': 30, 'Jumping Reach': 30,
-            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 10, 'Strength': 5,
+            'Acceleration': 100, 'Agility': 40, 'Balance': 33, 'Jumping Reach': 33,
+            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 20, 'Strength': 5,
         }
     },
     'IAS': {
         'attributes': {
             # Technisch
-            'Crossing': 25, 'Dribbling': 40, 'Finishing': 40,
-            'First Touch': 10, 'Heading': 15, 'Long Shots': 10,
+            'Crossing': 25, 'Dribbling': 40, 'Finishing': 25,
+            'First Touch': 15, 'Heading': 25, 'Long Shots': 10,
             'Marking': 0, 'Passing': 10, "Tackling": 0,
-            'Technique': 15, 'WeakFoot': 15,
+            'Technique': 15, 'WeakFoot': 25,
             # Mental
-            'Aggression': 0, 'Anticipation': 20, 'Bravery': 10,
-            'Composure': 25, 'Concentration': 25, 'Decisions': 15,
-            'Determination': 10, 'Flair': 20, 'Off The Ball': 20,
-            'Positioning': 0, 'Teamwork': 10, 'Vision': 15, 'Work Rate': 25,
+            'Aggression': 0, 'Anticipation': 25, 'Bravery': 10,
+            'Composure': 33, 'Concentration': 20, 'Decisions': 20,
+            'Determination': 10, 'Flair': 10, 'Off The Ball': 33,
+            'Positioning': 0, 'Teamwork': 10, 'Vision': 10, 'Work Rate': 25,
             # Physisch
-            'Acceleration': 100, 'Agility': 20, 'Balance': 20, 'Jumping Reach': 50,
-            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 5, 'Strength': 10,
+            'Acceleration': 100, 'Agility': 25, 'Balance': 25, 'Jumping Reach': 50,
+            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 25, 'Strength': 10,
         }
     },
     'ST': {
         'attributes': {
             # Technisch
-            'Crossing': 0, 'Dribbling': 30, 'Finishing': 50,
-            'First Touch': 15, 'Heading': 25, 'Long Shots': 5,
+            'Crossing': 0, 'Dribbling': 33, 'Finishing': 33,
+            'First Touch': 25, 'Heading': 33, 'Long Shots': 5,
             'Marking': 0, 'Passing': 5, "Tackling": 0,
-            'Technique': 10, 'WeakFoot': 30,
+            'Technique': 10, 'WeakFoot': 25,
             # Mental
-            'Aggression': 0, 'Anticipation': 10, 'Bravery': 15,
-            'Composure': 25, 'Concentration': 20, 'Decisions': 5,
-            'Determination': 10, 'Flair': 10, 'Off The Ball': 15,
-            'Positioning': 0, 'Teamwork': 5, 'Vision': 5, 'Work Rate': 25,
+            'Aggression': 0, 'Anticipation': 25, 'Bravery': 10,
+            'Composure': 33, 'Concentration': 20, 'Decisions': 20,
+            'Determination': 10, 'Flair': 10, 'Off The Ball': 25,
+            'Positioning': 0, 'Teamwork': 10, 'Vision': 10, 'Work Rate': 25,
             # Physisch
-            'Acceleration': 100, 'Agility': 20, 'Balance': 20, 'Jumping Reach': 70,
-            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 5, 'Strength': 20,
+            'Acceleration': 100, 'Agility': 25, 'Balance': 25, 'Jumping Reach': 70,
+            'Natural Fitness': 0, 'Pace': 100, 'Stamina': 25, 'Strength': 20,
         }
     },
 }
