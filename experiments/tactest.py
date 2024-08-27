@@ -31,7 +31,7 @@ def extract_data_from_html(file_path):
     return df
 
 
-run = "revamp_343_variation"
+run = "revamp_343_wide"
 
 # Get all files in the directory
 all_files = os.listdir(f"../exported_tables/{run}")
@@ -46,6 +46,7 @@ combined_df = pd.concat(data_frames, ignore_index=True)
 
 #combined_df['Tactic'] = combined_df['Team'].apply(lambda x: ' '.join(x.split()[2:]))
 combined_df['Tactic'] = combined_df['Team'].apply(lambda x: ' '.join(x.split()[:2]))
+#combined_df['Tactic'] = combined_df['Team'].apply(lambda x: ' '.join(x.split()[:1]))
 
 # Plot aggregated data by Tactic
 plt.figure(figsize=(18, 6))

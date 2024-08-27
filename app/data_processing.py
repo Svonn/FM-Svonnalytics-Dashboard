@@ -4,10 +4,10 @@ import re
 import numpy as np
 import pandas as pd
 
-from configurations import foot_rating_conversion, role_mapping, role_weightings, column_mapping
+from configurations import foot_rating_conversion, role_weightings, column_mapping
 
 
-def calculate_rating_range_with_malus(data, weightings, threshold=15, factor=0.01):
+def calculate_rating_range_with_malus(data, weightings, threshold=15, factor=0.00):
     ratings_lower = {}
     ratings_upper = {}
     for attribute_value, weight in weightings.items():
@@ -25,18 +25,23 @@ def calculate_rating_range_with_malus(data, weightings, threshold=15, factor=0.0
     return pd.Series(total_rating_lower), pd.Series(total_rating_upper)
 
 
+def calculate_rating_range_without_malus(data, weightings):
+    ratings_lower = {}
+    ratings_upper = {}
+    for attribute_value, weight in weightings.items():
+        lower_range = np.array(data[f'{attribute_value}_lower'])
+        upper_range = np.array(data[f'{attribute_value}_upper'])
+
+        ratings_lower[attribute_value + '_rating'] = lower_range * weight
+        ratings_upper[attribute_value + '_rating'] = upper_range * weight
+
+    total_rating_lower = sum(ratings_lower.values())
+    total_rating_upper = sum(ratings_upper.values())
+
+    return pd.Series(total_rating_lower), pd.Series(total_rating_upper)
+
 def normalize_and_round(ratings, total_weighting):
     return np.round(ratings / total_weighting, 1)
-
-
-def filter_role_weightings(squad_df, role_weightings):
-    filtered_role_weightings = {}
-
-    for role in role_weightings.keys():
-        if can_play_role(squad_df, role).any():
-            filtered_role_weightings[role] = role_weightings[role]
-
-    return filtered_role_weightings
 
 
 def process_attribute_column(col):
@@ -178,12 +183,11 @@ def process_file(file_path):
     df['Position'] = df['Position'].apply(parse_positions)
 
     calculate_weak_foot_rating(df)
-    filtered_role_weightings = filter_role_weightings(df, role_weightings)
 
     new_ratings = {}
-    for role, config in filtered_role_weightings.items():
+    for role, config in role_weightings.items():
         total_weighting = sum(config['attributes'].values())
-        worst_case_ratings, best_case_ratings = calculate_rating_range_with_malus(df, config['attributes'])
+        worst_case_ratings, best_case_ratings = calculate_rating_range_without_malus(df, config['attributes'])
         average_rating = (worst_case_ratings + best_case_ratings) / 2
         worst_case_ratings = normalize_and_round(worst_case_ratings, total_weighting)
         best_case_ratings = normalize_and_round(best_case_ratings, total_weighting)
@@ -199,8 +203,8 @@ def process_file(file_path):
 
     print(f"Finished calculating ratings: {round((pd.Timestamp.now() - start_ts).total_seconds(), 2)} seconds")
     start_ts = pd.Timestamp.now()
-    role_rating_range_columns = [f'{role} (Rating)' for role in filtered_role_weightings.keys()]
-    role_rating_average_columns = [f'{role} (Average Rating)' for role in filtered_role_weightings.keys()]
+    role_rating_range_columns = [f'{role} (Rating)' for role in role_weightings.keys()]
+    role_rating_average_columns = [f'{role} (Average Rating)' for role in role_weightings.keys()]
     df['Best Rating'] = df[role_rating_average_columns].max(axis=1)
     df['Best Role'] = df[role_rating_average_columns].idxmax(axis=1)
     # remove 'Average Rating' part in Best Role
@@ -222,7 +226,7 @@ def process_file(file_path):
 
     print(f"Preparing final structure: {round((pd.Timestamp.now() - start_ts).total_seconds(), 2)} seconds")
     print("Data points: ", len(df))
-    return df, filtered_role_weightings, position_options, mode
+    return df, role_weightings, position_options, mode
 
 
 def calculate_value_per_cost(df, base=2):
@@ -255,7 +259,7 @@ def get_relevant_columns(role, filtered_role_weightings, mode):
     else:
         role_rating_column = f'{role} (Rating)'
         # get all relevant attributes with a weight of at least 2.5
-        relevant_attributes = [attr for attr, weight in filtered_role_weightings[role]['attributes'].items() if weight >= 50]
+        relevant_attributes = [attr for attr, weight in filtered_role_weightings[role]['attributes'].items() if weight >= 40]
         return priority_columns + [f'{role} Recommendation'] + [role_rating_column] + other_columns + relevant_attributes
 
 
@@ -285,12 +289,3 @@ def parse_positions(position_string):
             for loc in locations:
                 all_positions.append(f'{fp}({loc})')
     return all_positions
-
-
-def can_play_role(data_frame, role):
-    valid_positions = set(role_mapping[role])
-    return data_frame['Position'].apply(lambda positions: bool(set(positions) & valid_positions))
-
-
-def filter_by_role(data_frame, role):
-    return data_frame[can_play_role(data_frame, role)]
